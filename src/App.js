@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -12,16 +12,39 @@ import { auth } from './firebase';
 import { currentUser, getUsers } from './Functions/Auth';
 import Nav from './Components/Nav';
 import Home from './Components/Home';
-import Login from './Pages/Auth/Login';
-import Register from './Pages/Auth/Register';
-import RegisterComplete from './Pages/Auth/RegisterComplete';
-import ResetPassword from './Pages/Auth/ResetPassword';
+import Login from './Pages/User/Login';
+import Register from './Pages/User/Register';
+import RegisterComplete from './Pages/User/RegisterComplete';
+import ResetPassword from './Pages/User/ResetPassword';
+import SignUp from './Pages/Partner/Signup';
+import SignUpType from './Pages/Partner/SignupType';
+import SignUpImages from './Pages/Partner/SignupImages';
+import BottomNav from './Components/BottomNav';
 
 const App = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const location = useLocation();
+	const [navObj, setNavObj] = useState({});
 
 	useEffect(() => {
+		if (location.pathname.includes('partner')) {
+			setNavObj({
+				title: 'Flavor Chronicles for business',
+				buttonOne: 'Login to view your existing restaurants',
+				buttonTwo: 'Register your restaurant',
+				buttonOneRoute: 'partner-login',
+				buttonTwoRoute: 'partner-signup',
+				positon: 'fixed-bottom'
+			})
+		} else {
+			setNavObj({
+				title: 'Flavor Chronicles',
+				buttonOne: 'Login',
+				buttonTwo: 'Create Account'
+			})
+		}
+
 		onAuthStateChanged(auth, async (user) => {
 			if (user) {
 				const idTokenResult = await user.getIdTokenResult();
@@ -83,19 +106,25 @@ const App = () => {
 				})
 			}
 		})
-	});
+	}, [dispatch]);
 
 	return (
 		<div className='App'>
-			<Nav />
+			{Object.keys(navObj).length && <Nav
+				obj={navObj}
+			/>}
 			<ToastContainer />
 			<Routes>
 				<Route exact path='/' element={<Home />} />
-				<Route exact path='/sign-in' element={<Login />} />
+				<Route exact path='/login' element={<Login />} />
 				<Route exact path='/create-account' element={<Register />} />
 				<Route exact path='/register-complete' element={<RegisterComplete />} />
 				<Route exact path='/reset-password' element={<ResetPassword />} />
+				<Route exact path='/partner-signup' element={<SignUp />} />
+				<Route exact path='/partner-signup/restaurant-type' element={<SignUpType />} />
+				<Route exact path='/partner-signup/upload-images' element={<SignUpImages />} />
 			</Routes>
+			<BottomNav />
 		</div>
 	);
 }

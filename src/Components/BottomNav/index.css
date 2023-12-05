@@ -1,6 +1,8 @@
-.navbar-top {
+.navbar-bottom {
     height: 70px;
-    background: rgba(0, 51, 102, 1);
+    background: rgb(255, 255, 255);
+    box-shadow: rgba(0, 0, 0, 0.08) 0px -1px 14px;
+    z-index: 2;
 }
 
 .navbar-brand,
@@ -17,25 +19,19 @@
     box-shadow: none !important;
 }
 
+.mr-20 {
+    margin-right: 15.5%;
+}
+
+.ml-20 {
+    margin-left: 16%;
+}
+
 .btn-close:focus {
     box-shadow: none !important;
 }
 
-.bi-person {
-    display: inline-block;
-    font-size: 30px;
-    color: rgb(255, 255, 255, 1);
-}
-
-.bi-cart {
-    display: inline-block;
-    font-size: 25px;
-    color: rgb(255, 255, 255, 1);
-}
-
-.btn-auth-filled {
-    width: 50%;
-    margin: 10px;
+.btn-pat-auth-filled {
     border: 1px solid rgba(0, 51, 102, 1);
     color: rgba(0, 51, 102, 1) !important;
 
@@ -45,9 +41,9 @@
     }
 }
 
-.btn-auth-filled:hover,
-.btn-auth-filled:active,
-.btn-auth-filled:focus-visible {
+.btn-pat-auth-filled:hover,
+.btn-pat-auth-filled:active,
+.btn-pat-auth-filled:focus-visible {
     background: rgba(0, 51, 102, 1) !important;
     color: rgb(255, 255, 255, 1) !important;
     border: 1px solid rgba(0, 51, 102, 1) !important;
@@ -59,9 +55,7 @@
     }
 }
 
-.btn-auth-hollow {
-    width: 50%;
-    margin: 10px;
+.btn-pat-auth-hollow {
     background: rgba(0, 51, 102, 1);
     color: rgb(255, 255, 255, 1) !important;
 
@@ -71,9 +65,9 @@
     }
 }
 
-.btn-auth-hollow:hover,
-.btn-auth-hollow:active,
-.btn-auth-hollow:focus-visible {
+.btn-pat-auth-hollow:hover,
+.btn-pat-auth-hollow:active,
+.btn-pat-auth-hollow:focus-visible {
     color: rgba(0, 51, 102, 1) !important;
     border: 1px solid rgba(0, 51, 102, 1) !important;
     box-shadow: none !important;
@@ -86,8 +80,6 @@
 
 .btn-option {
     .btn {
-        width: 50%;
-
         .custom-text-color {
             color: rgba(0, 51, 102, 1) !important;
             font-weight: 500 !important;
@@ -98,7 +90,6 @@
 .btn-option:hover,
 .active-option {
     .btn {
-        width: 50%;
         background: rgba(0, 51, 102, 1) !important;
 
         .custom-text-color {
