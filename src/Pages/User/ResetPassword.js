@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { sendPasswordResetEmail } from "firebase/auth";
 
 import { auth } from '../../firebase';
 import { checkUser } from '../../Functions/Auth';
@@ -40,8 +41,7 @@ const ResetPassword = ({ history }) => {
 			url: process.env.REACT_APP_LOGIN_REDIRECT_URL,
 			handleCodeInApp: true,
 		};
-		await auth
-			.generatePasswordResetLink(email, config)
+		await sendPasswordResetEmail(auth, email)
 			.then(() => {
 				setEmail('');
 				setLoading(false);
@@ -78,7 +78,7 @@ const ResetPassword = ({ history }) => {
 
 						<div className='form-group row'>
 							<div className='col-md-5 col-6 offset-md-3 text-start p-0'>
-								<button className='btn btn-raised btn-outline-success fw-bold' type='submit' disabled={!email}>
+								<button className='btn btn-raised btn-filled fw-bold' type='submit' disabled={!email}>
 									Reset Password
 								</button>
 							</div>

@@ -7,7 +7,8 @@ import { toast } from 'react-toastify';
 import { auth } from '../../firebase';
 import './index.css';
 
-const Nav = () => {
+const Nav = ({ obj }) => {
+    const { title, buttonOne, buttonTwo, buttonOneRoute, buttonTwoRoute } = obj;
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
@@ -25,6 +26,16 @@ const Nav = () => {
     const handleRoute = (option) => {
         let routes = option.split(' ');
         return `/${routes.length > 1 ? routes.map(route => route.toLowerCase()).join('-') : routes[0].toLowerCase()}`;
+    }
+
+    const handleNavRoute = (option) => {
+        let route;
+        if(option === 'Flavor Chronicles') {
+            route = '/';
+        } else {
+            route = '/partner-with-us';
+        }
+        return route;
     }
 
     const handleSignout = () => {
@@ -46,10 +57,10 @@ const Nav = () => {
     }
 
     return (
-        <nav className='navbar navbar-light fixed-top shadow-lg'>
+        <nav className='navbar navbar-top navbar-light fixed-top shadow-lg'>
             <div className='container-fluid justify-content mx-md-3'>
                 <div>
-                    <Link className='navbar-brand fw-bold fs-5' to='/'>Flavor Chronicles</Link>
+                    <Link className='navbar-brand fw-bold fs-5' to={handleNavRoute(title)}>{title}</Link>
                 </div>
                 <div className='dropdown justify-content-end mx-3 d-flex'>
                     <button className='navbar-toggler mx-md-3 mx-2' type='button' data-bs-toggle='offcanvas' data-bs-target='#offcanvaslightNavbarOuter' aria-controls='offcanvaslightNavbarOuter'>
@@ -79,12 +90,12 @@ const Nav = () => {
                             </ul> : <ul className='navbar-nav text-center flex-grow-1'>
                                 <li className='nav-item'>
                                     <button className='btn btn-auth-filled' data-bs-dismiss='offcanvas'>
-                                        <Link className='text-decoration-none custom-text-color' to={handleRoute('Sign In')}>Sign In</Link>
+                                        <Link className='text-decoration-none custom-text-color' to={buttonOneRoute || handleRoute('Login')}>{buttonOne}</Link>
                                     </button>
                                 </li>
                                 <li className='nav-item'>
                                     <button className='btn btn-auth-hollow' data-bs-dismiss='offcanvas'>
-                                        <Link className='text-decoration-none custom-text-color' to={handleRoute('Create Account')}>Create Account</Link>
+                                        <Link className='text-decoration-none custom-text-color' to={buttonTwoRoute || handleRoute('Create Account')}>{buttonTwo}</Link>
                                     </button>
                                 </li>
                             </ul>}

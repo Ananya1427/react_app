@@ -59,7 +59,7 @@ const Register = () => {
                 <div className='col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-10 offset-1 shadow p-lg-5 p-md-4 p-3'>
                     <form onSubmit={handleSubmit} className='container-fluid'>
                         <div className='form-group mb-4 text-center'>
-                            {loading ? <h3>Loading...</h3> : <h3>Registration</h3>}
+                            {loading ? <h3>Loading...</h3> : <h3>Signup</h3>}
                         </div>
                         <div className='form-group my-3 row'>
                             <label htmlFor='email' className='col-md-3 d-none d-md-block col-form-label text-end fw-bold fs-6'>Email</label>
