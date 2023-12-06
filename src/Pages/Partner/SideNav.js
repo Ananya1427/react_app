@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 
+import './index.css'
+
 const SideNav = () => {
     return (
-        <div className='col-lg-2 offset-2 col-md-8 col-10 me-2 p-0'>
+        <div className='col-lg-2 offset-2 col-md-8 col-10 me-2 p-0 side-nav'>
             <div className='shadow p-4'>
                 <h6 className='text-start border-bottom pb-3'>1. Create your restaurant page</h6>
                 <ul class='list-group'>

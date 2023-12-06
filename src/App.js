@@ -124,7 +124,7 @@ const App = () => {
 				<Route exact path='/partner-signup/restaurant-type' element={<SignUpType />} />
 				<Route exact path='/partner-signup/upload-images' element={<SignUpImages />} />
 			</Routes>
-			<BottomNav />
+			{(location.pathname.includes('partner')) && <BottomNav />}
 		</div>
 	);
 }
