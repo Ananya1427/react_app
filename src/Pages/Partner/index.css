@@ -17,3 +17,9 @@
 .ms-2 {
     margin-bottom: 10%;
 }
+
+.side-nav {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 0;
+}
