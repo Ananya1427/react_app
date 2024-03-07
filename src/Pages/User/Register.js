@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { sendSignInLinkToEmail } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 import './Auth.css';
 import { auth } from '../../firebase';
 import { checkUser } from '../../Functions/Auth';
 
-const Register = () => {
+const Register = ({ title }) => {
     const navigate = useNavigate();
+    const location = useLocation();
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -16,13 +17,13 @@ const Register = () => {
         e.preventDefault();
         setLoading(true);
 
-        checkUser(email)
+        checkUser(email, location.pathname.includes('partner'))
             .then((res) => {
                 if (res.status === 200) {
-                    userRedirect(res.data.role);
+                    userRedirect(res.data.role, res.data.pathname);
                 } else {
                     const config = {
-                        url: process.env.REACT_APP_REGISTER_REDIRECT_URL,
+                        url: location.pathname.includes('partner') ? process.env.REACT_APP_PARTNER_REGISTER_REDIRECT_URL : process.env.REACT_APP_REGISTER_REDIRECT_URL,
                         handleCodeInApp: true,
                     };
                     sendSignInLinkToEmail(auth, email, config)
@@ -30,28 +31,28 @@ const Register = () => {
                             toast.success(
                                 `Email is sent to ${email}. Click the link to complete your registration.`
                             );
+                            setLoading(false);
                             navigate('/');
                         })
                         .catch(error => {
                             window.alert(error);
+                            setLoading(false);
                             navigate('/');
                         });
+                    window.localStorage.setItem('email', email);
                 }
             })
             .catch((error) => {
                 toast.error(error);
                 setLoading(false);
             });
+    }
 
-        const userRedirect = (role) => {
-            if (role === 'user' || role === 'admin') {
-                toast.error(`You're already registered as ${role}`);
-                navigate('/sign-in');
-            }
-            setLoading(false);
-        }
-        window.localStorage.setItem('email', email);
-    };
+    const userRedirect = (role, pathname) => {
+        toast.error(`You're already registered as ${role}`);
+        navigate(pathname);
+        setLoading(false);
+    }
 
     return (
         <div className='container mt-5'>
@@ -59,7 +60,7 @@ const Register = () => {
                 <div className='col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-10 offset-1 shadow p-lg-5 p-md-4 p-3'>
                     <form onSubmit={handleSubmit} className='container-fluid'>
                         <div className='form-group mb-4 text-center'>
-                            {loading ? <h3>Loading...</h3> : <h3>Signup</h3>}
+                            {loading ? <h3>Loading...</h3> : <h3>{title || 'Signup'}</h3>}
                         </div>
                         <div className='form-group my-3 row'>
                             <label htmlFor='email' className='col-md-3 d-none d-md-block col-form-label text-end fw-bold fs-6'>Email</label>

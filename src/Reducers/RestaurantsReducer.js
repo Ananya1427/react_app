@@ -1,6 +1,6 @@
-export const usersReducer = (state = null, action) => {
+export const restaurantsReducer = (state = null, action) => {
 	switch (action.type) {
-		case 'REGISTERED_USERS':
+		case 'REGISTERED_RESTAURANTS':
 			return action.payload;
 		case 'LOGOUT':
 			return action.payload;

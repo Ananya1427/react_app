@@ -7,12 +7,12 @@ import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDJWJofoviuedNfqmmC06dsUcYeC5digPU",
-  authDomain: "inner-virtue-403114.firebaseapp.com",
-  projectId: "inner-virtue-403114",
-  storageBucket: "inner-virtue-403114.appspot.com",
-  messagingSenderId: "113753150728",
-  appId: "1:113753150728:web:5e4da9b9620ee58cd188bd"
+  apiKey: 'AIzaSyAIIVTLOxzCYhH-FYaOuFd10t7fdjFAlWU',
+  authDomain: 'foodapp-e1400.firebaseapp.com',
+  projectId: 'foodapp-e1400',
+  storageBucket: 'foodapp-e1400.appspot.com',
+  messagingSenderId: '485609905614',
+  appId: '1:485609905614:web:e06cf326d0a65a92f8df9f'
 };
 
 // Initialize Firebase

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { sendPasswordResetEmail } from "firebase/auth";
+import { sendPasswordResetEmail } from 'firebase/auth';
 
 import { auth } from '../../firebase';
 import { checkUser } from '../../Functions/Auth';

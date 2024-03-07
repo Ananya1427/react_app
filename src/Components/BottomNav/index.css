@@ -98,3 +98,7 @@
         }
     }
 }
+
+.not-allowed {
+    cursor: no-drop !important;
+}

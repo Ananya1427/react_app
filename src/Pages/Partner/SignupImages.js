@@ -1,15 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from 'react';
 
-import SideNav from "./SideNav";
-import FileUpload from "./FileUpload";
+import SideNav from './SideNav';
+import FileUpload from './FileUpload';
 import banner from '../../Assets/add_photos.svg';
-import DisplayImgaes from "./DisplayImages";
+import DisplayImgaes from './DisplayImages';
+import BottomNav from '../../Components/BottomNav';
+import { useSelector } from 'react-redux';
 
-const SignUpImages = () => {
+const SignUpImages = ({ register }) => {
+    const { signup, restaurant } = useSelector((state) => ({...state}));
+    const [menuImages, setMenuImages] = useState(signup?.menuImages || []);
+    const [restaurantImages, setRestaurantImages] = useState(signup?.restaurantImages || []);
+    const [foodImages, setFoodImages] = useState(signup?.foodImages || []);
+    const [loading, setLoading] = useState(false);
+    
+    useEffect(() => {
+        if (restaurant) {
+            setMenuImages(restaurant?.menuImages[0]);
+            setFoodImages(restaurant?.foodImages[0]);
+            setRestaurantImages(restaurant?.restaurantImages[0]);
+        }
+    }, [restaurant])
 
-    const [menuImages, setMenuImages] = useState([]);
-    const [restaurantImages, setRestaurantImages] = useState([]);
-    const [foodImages, setFoodImages] = useState([]);
+    const validateStates = () => {
+        let bool;
+        if (menuImages?.length > 0 && restaurantImages?.length > 0 && foodImages?.length > 0) {
+            bool = true;
+        } else {
+            bool = false;
+        }
+        return bool;
+    }
 
     return (
         <div className='partner-signup container mt-5'>
@@ -29,7 +50,9 @@ const SignUpImages = () => {
                                             {' Browse'}
                                             <FileUpload
                                                 id={'add-menu-images-browse'}
+                                                images={menuImages}
                                                 setImages={setMenuImages}
+                                                setLoading={setLoading}
                                             />
                                         </label>
                                     </div>
@@ -42,7 +65,9 @@ const SignUpImages = () => {
                                             <img htmlFor={'add-menu-images-icon'} src={banner} alt='add-menu' />
                                             <FileUpload
                                                 id={'add-menu-images-icon'}
+                                                images={menuImages}
                                                 setImages={setMenuImages}
+                                                setLoading={setLoading}
                                             />
                                         </label>
                                     </div>
@@ -59,7 +84,9 @@ const SignUpImages = () => {
                                             {' Browse'}
                                             <FileUpload
                                                 id={'add-restaurant-images-browse'}
+                                                images={restaurantImages}
                                                 setImages={setRestaurantImages}
+                                                setLoading={setLoading}
                                             />
                                         </label>
                                     </div>
@@ -72,7 +99,9 @@ const SignUpImages = () => {
                                             <img htmlFor={'add-restaurant-images-icon'} src={banner} alt='add-restaurant' />
                                             <FileUpload
                                                 id={'add-restaurant-images-icon'}
+                                                images={restaurantImages}
                                                 setImages={setRestaurantImages}
+                                                setLoading={setLoading}
                                             />
                                         </label>
                                     </div>
@@ -89,7 +118,9 @@ const SignUpImages = () => {
                                             {' Browse'}
                                             <FileUpload
                                                 id={'add-food-images-browse'}
+                                                images={foodImages}
                                                 setImages={setFoodImages}
+                                                setLoading={setLoading}
                                             />
                                         </label>
                                     </div>
@@ -102,7 +133,9 @@ const SignUpImages = () => {
                                             <img htmlFor={'add-food-images-icon'} src={banner} alt='add-food' />
                                             <FileUpload
                                                 id={'add-food-images-icon'}
+                                                images={foodImages}
                                                 setImages={setFoodImages}
+                                                setLoading={setLoading}
                                             />
                                         </label>
                                     </div>
@@ -111,6 +144,13 @@ const SignUpImages = () => {
                         </form>
                     </div>
                 </div>
+                <BottomNav
+                    validateStates={validateStates()}
+                    obj={{restaurantImages, menuImages, foodImages}}
+                    prevRoute={-1}
+                    nextRoute={''}
+                    register={register}
+                />
             </div>
         </div>
     )

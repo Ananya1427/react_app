@@ -12,20 +12,26 @@ const Nav = ({ obj }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
-    const { user } = useSelector(state => ({ ...state }));
+    const { user, restaurant } = useSelector(state => ({ ...state }));
 
     const [loading, setLoading] = useState(false);
     const [header, setHeader] = useState('Welcome!');
     const [options, setOptions] = useState('');
 
     useEffect(() => {
-        setHeader(user ? `Welcome ${user.firstName}!` : 'Welcome!');
-        setOptions(user && user.options);
-    }, [user])
+        setHeader(user || restaurant ? `Welcome ${user?.firstName || restaurant?.restaurantName}!` : 'Welcome!');
+        setOptions(user?.options || restaurant?.options);
+    }, [user, restaurant])
 
     const handleRoute = (option) => {
         let routes = option.split(' ');
-        return `/${routes.length > 1 ? routes.map(route => route.toLowerCase()).join('-') : routes[0].toLowerCase()}`;
+        if (restaurant) {
+            return `/${routes.length > 1 ? ('partner').concat('-', routes.map(route => route.toLowerCase()).join('-')) : ('partner').concat('-', routes[0].toLowerCase())}`;
+        } else if (user) {
+            return `/${routes.length > 1 ? (user.role).concat('-', routes.map(route => route.toLowerCase()).join('-')) : (user.role).concat('-', routes[0].toLowerCase())}`;
+        } else {
+            return `/${routes.length > 1 ? routes.map(route => route.toLowerCase()).join('-') : routes[0].toLowerCase()}`;
+        }
     }
 
     const handleNavRoute = (option) => {
@@ -78,8 +84,8 @@ const Nav = ({ obj }) => {
                             <button type='button' className='btn-close btn-close-black' data-bs-dismiss='offcanvas' aria-label='Close'></button>
                         </div>
                         <div className='offcanvas-body py-0'>
-                            {user ? <ul className='navbar-nav text-start flex-grow-1 p-0 m-0'>
-                                {options && options.map(option => <li className={`nav-item px-2 py-1 rounded ${location.pathname === handleRoute(option) ? 'active-option' : 'btn-option'}`} key={option}>
+                            {user || restaurant ? <ul className='navbar-nav text-start flex-grow-1 p-0 m-0'>
+                                {options && options.map(option => <li className={`nav-item px-1 py-1 rounded ${location.pathname === handleRoute(option) ? 'active-option' : 'btn-option'}`} key={option}>
                                     <button className='btn border-0 text-start' data-bs-dismiss='offcanvas'>
                                         <Link className='text-decoration-none custom-text-color d-flex w-100' to={handleRoute(option)}>{option}</Link>
                                     </button>

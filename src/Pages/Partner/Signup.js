@@ -1,6 +1,51 @@
-import SideNav from "./SideNav";
+import React, { useEffect, useState } from 'react';
 
-const SignUp = () => {
+import BottomNav from '../../Components/BottomNav';
+import SideNav from './SideNav';
+import { useSelector } from 'react-redux';
+
+const SignUp = ({ route, disable }) => {
+    const { signup, restaurant } = useSelector((state) => ({...state}));
+    const [restaurantName, setRestaurantName] = useState(signup?.restaurantName || '');
+    const [address, setAddress] = useState(signup?.address || '');
+    const [state, setState] = useState(signup?.state || '');
+    const [city, setCity] = useState(signup?.city || '');
+    const [zipCode, setZipCode] = useState(signup?.zipCode || '');
+    const [restaurantContact, setRestaurantContact] = useState(signup?.restaurantContact || '');
+    const [ownerContact, setOwnerContact] = useState(signup?.ownerContact || '');
+    const [firstName, setFirstName] = useState(signup?.firstName || '');
+    const [lastName, setLastName] = useState(signup?.lastName || '');
+    const [email, setEmail] = useState(signup?.email || '');
+    const [password, setPassword] = useState(signup?.password || '');
+    const [confirmPassword, setConfirmPassword] = useState(signup?.confirmPassword || '');
+    const [href, setHref] = useState('');
+
+    useEffect(() => {
+        setEmail(window.localStorage.getItem('email') || '');
+        setHref(window.location.href || '');
+        if (restaurant) {
+            setRestaurantName(restaurant?.restaurantName);
+            setAddress(restaurant?.address);
+            setState(restaurant?.state);
+            setCity(restaurant?.city);
+            setZipCode(restaurant?.zipCode);
+            setRestaurantContact(restaurant?.restaurantContact);
+            setOwnerContact(restaurant?.ownerContact);
+            setFirstName(restaurant?.firstName);
+            setLastName(restaurant?.lastName);
+        }
+    }, [restaurant])
+
+    const validateStates = () => {
+        let bool;
+        if (restaurantName && address && state && city && zipCode && restaurantContact && ownerContact && firstName && lastName && email && password && confirmPassword && (password === confirmPassword)) {
+            bool = true;
+        } else {
+            bool = false
+        }
+        return bool;
+    }
+
     return (
         <div className='partner-signup container mt-5'>
             <div className='row mt-5 pt-5'>
@@ -17,8 +62,8 @@ const SignUp = () => {
                                         id='restaurant-name'
                                         type='text'
                                         className='form-control w-100'
-                                        value={''}
-                                        onChange={''}
+                                        value={restaurantName}
+                                        onChange={(e) => setRestaurantName(e.target.value)}
                                         placeholder='Restaurant Name'
                                     />
                                 </div>
@@ -27,8 +72,8 @@ const SignUp = () => {
                                         id='restaurant-address'
                                         type='text'
                                         className='form-control w-100'
-                                        value={''}
-                                        onChange={''}
+                                        value={address}
+                                        onChange={(e) => setAddress(e.target.value)}
                                         placeholder='Restaurant Street Address'
                                     />
                                 </div>
@@ -37,8 +82,8 @@ const SignUp = () => {
                                         id='restaurant-state'
                                         type='text'
                                         className='form-control w-100'
-                                        value={''}
-                                        onChange={''}
+                                        value={state}
+                                        onChange={(e) => setState(e.target.value)}
                                         placeholder='State'
                                     />
                                 </div>
@@ -47,8 +92,8 @@ const SignUp = () => {
                                         id='restaurant-city'
                                         type='text'
                                         className='form-control w-100'
-                                        value={''}
-                                        onChange={''}
+                                        value={city}
+                                        onChange={(e) => setCity(e.target.value)}
                                         placeholder='City'
                                     />
                                 </div>
@@ -57,8 +102,8 @@ const SignUp = () => {
                                         id='restaurant-zip-code'
                                         type='text'
                                         className='form-control w-100'
-                                        value={''}
-                                        onChange={''}
+                                        value={zipCode}
+                                        onChange={(e) => setZipCode(e.target.value)}
                                         placeholder='Zip Code'
                                     />
                                 </div>
@@ -73,8 +118,8 @@ const SignUp = () => {
                                         id='restaurant-number'
                                         type='text'
                                         className='form-control'
-                                        value={''}
-                                        onChange={''}
+                                        value={restaurantContact}
+                                        onChange={(e) => setRestaurantContact(e.target.value)}
                                         placeholder='Restaurant Contact Number'
                                     />
                                 </div>
@@ -89,8 +134,8 @@ const SignUp = () => {
                                         id='onwer-contact-number'
                                         type='text'
                                         className='form-control'
-                                        value={''}
-                                        onChange={''}
+                                        value={ownerContact}
+                                        onChange={(e) => setOwnerContact(e.target.value)}
                                         placeholder='Owner Contact Number'
                                     />
                                 </div>
@@ -99,8 +144,8 @@ const SignUp = () => {
                                         id='owner-firstname'
                                         type='text'
                                         className='form-control w-100'
-                                        value={''}
-                                        onChange={''}
+                                        value={firstName}
+                                        onChange={(e) => setFirstName(e.target.value)}
                                         placeholder='Owner FisrtName'
                                     />
                                 </div>
@@ -109,8 +154,8 @@ const SignUp = () => {
                                         id='onwer-lastname'
                                         type='text'
                                         className='form-control w-100'
-                                        value={''}
-                                        onChange={''}
+                                        value={lastName}
+                                        onChange={(e) => setLastName(e.target.value)}
                                         placeholder='Owner LastName'
                                     />
                                 </div>
@@ -120,15 +165,44 @@ const SignUp = () => {
                                         id='onwer-email-address'
                                         type='email'
                                         className='form-control'
-                                        value={''}
-                                        onChange={''}
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        disabled={disable}
                                         placeholder='Owner Email Address'
+                                    />
+                                </div>
+                                <div className='col-6 my-3 mb-md-1 px-3'>
+                                    <input
+                                        id='password'
+                                        type='password'
+                                        className='form-control w-100'
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        placeholder='Password'
+                                        required
+                                    />
+                                </div>
+                                <div className='col-6 my-3 mb-md-1 px-3'>
+                                    <input
+                                        id='confirm-password'
+                                        type='password'
+                                        className='form-control w-100'
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        placeholder='Confirm Password'
+                                        required
                                     />
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
+                <BottomNav
+                    validateStates={validateStates()}
+                    obj={{ restaurantName, address, state, city, zipCode, restaurantContact, ownerContact, firstName, lastName, email, password, confirmPassword, href, route }}
+                    nextRoute={`${route}/restaurant-type`}
+                    prevRoute={''}
+                />
             </div>
         </div>
     )
