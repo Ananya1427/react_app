@@ -104,13 +104,13 @@ const Login = ({ title, role }) => {
         getCurrentRestaurant(idTokenResult.token, user.email)
             .then((res) => {
                 if (res.status === 200) {
-                    const { restaurantName, address, state, city, zipCode, restaurantContact, ownerContact, firstName, lastName, email, establishmentType, outletType, cuisines, weekDays, opensAt, closesAt, menuImages, restaurantImages, foodImages, status, _id } = res.data.restaurant;
+                    const { restaurantName, address, state, city, zipCode, restaurantContact, ownerContact, firstName, lastName, email, establishmentType, outletType, cuisineType, weekDays, opensAt, closesAt, menuImages, restaurantImages, foodImages, status, _id } = res.data.restaurant;
                     toast.success(`Welcome ${firstName}! `);
                     const { idToken } = res.config.headers;
                     options = ['Dashboard', 'Create Cuisine', 'Manage Cuisines', 'Manage Orders', 'Orders History', 'Manage Profile'];
                     dispatch({
                         type: 'LOGGED_IN_RESTAURANT',
-                        payload: { restaurantName, address, state, city, zipCode, restaurantContact, ownerContact, firstName, lastName, email, establishmentType, outletType, cuisines, weekDays, opensAt, closesAt, menuImages, restaurantImages, foodImages, status, _id, options, token: idToken }
+                        payload: { restaurantName, address, state, city, zipCode, restaurantContact, ownerContact, firstName, lastName, email, establishmentType, outletType, cuisineType, weekDays, opensAt, closesAt, menuImages, restaurantImages, foodImages, status, _id, options, token: idToken }
                     });
                     // rolebasedredirect('partner');
                     navigate(-1);
