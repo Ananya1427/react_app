@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 
-const Modal = ({ btnTitle, title, product, count, selection, setCount, setSelection, onClickEvent, onClickCancel }) => {
+const Modal = ({ btnTitle, title, product, count, selection, setCount, setSelection, onClickEvent, onClickCancel, restaurant }) => {
     const location = useLocation();
     let range = [];
 
@@ -9,7 +9,7 @@ const Modal = ({ btnTitle, title, product, count, selection, setCount, setSelect
 
     useEffect(() => {
         if (product && product.quantity) {
-            createRange(product && product.quantity)
+            createRange(product && product.quantity);
         }
     }, [product])
 
@@ -27,7 +27,7 @@ const Modal = ({ btnTitle, title, product, count, selection, setCount, setSelect
     }
 
     const handleClick = () => {
-        onClickEvent({ product, count: selection });
+        onClickEvent({ product, count: selection, orderFrom: restaurant });
     }
 
     const handleCancel = () => {
@@ -42,15 +42,15 @@ const Modal = ({ btnTitle, title, product, count, selection, setCount, setSelect
                         <h1 className='modal-title fs-5' id='staticBackdropLabel'></h1>
                         <button type='button' className='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
                     </div>
-                    {location.pathname === '/' ?
+                    {location.pathname ?
                         <div className='modal-body d-flex flex-column'>
-                            <label htmlFor={`quantity-dropdown-${product._id}`} className='col-form-label'>{title}</label>
+                            <label htmlFor={`quantity-dropdown-${product._id}`} className='col-form-label text-start'>{title}</label>
                             <div className='input-group w-50'>
                                 <select
                                     className='form-select rounded'
                                     id={`quantity-dropdown-${product._id}`}
                                     aria-label='Default select example'
-                                    value={selection}
+                                    value={selection || product?.count}
                                     onChange={(e) => handleSelection(e.target.value)}
                                 >
                                     {productQuantity && productQuantity.map(q => <option key={q} value={q}>{q}</option>)}

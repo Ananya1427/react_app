@@ -8,7 +8,7 @@ import { signInWithEmailLink, updatePassword } from 'firebase/auth';
 import { createOrUpdateUser, currentUser } from '../../Functions/Auth';
 import states from '../JSON/States.json';
 
-const RegisterComplete = ({ profileUpdate }) => {
+const RegisterComplete = ({ profileUpdate=false, role = 'user' }) => {
     const { user } = useSelector(state => ({ ...state }));
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -28,6 +28,7 @@ const RegisterComplete = ({ profileUpdate }) => {
     const [title, setTitle] = useState(user ? 'Manage Profile' : 'Registration Form');
     const [btnTitle, setBtnTitle] = useState(user ? 'Update' : 'Register');
     const [loading, setLoading] = useState(false);
+    const [passwordUpdate, setPasswordUpdate] = useState(false);
 
     useEffect(() => {
         if (profileUpdate && user) {
@@ -49,13 +50,10 @@ const RegisterComplete = ({ profileUpdate }) => {
     }, [profileUpdate, user])
 
     const rolebasedredirect = (role) => {
-        if (role === 'admin') {
-            navigate('/');
+        if (role === 'driver') {
+            navigate('/driver-dashboard');
         }
-        else if (role === 'crew') {
-            navigate('/crew-dashboard');
-        }
-        else if (role === 'user') {
+        else {
             navigate('/');
         }
     };
@@ -78,21 +76,19 @@ const RegisterComplete = ({ profileUpdate }) => {
                     await currentUser(email, idTokenResult.token)
                         .then((res) => {
                             if (res.status === 200) {
-                                const { firstName, lastName, dob, gender, email, contact, address, state, city, pinCode, role, _id } = res.data.user;
+                                const { firstName, lastName, dob, gender, email, contact, address, state, city, zipCode, role, _id } = res.data.user;
                                 const { idToken } = res.config.headers;
                                 switch (role) {
-                                    case 'admin': options = ['Dashboard', 'Add Restaurant', 'Manage Restaurants', 'Manage Users', 'Profile'];
+                                    case 'admin': options = ['Dashboard', 'Add Restaurant', 'Manage Restaurants', 'Manage Users', 'Manage Drivers', 'Profile'];
                                         break;
-                                    case 'restaurant': options = ['Dashboard', 'Create Category', 'Manage Categories', 'Manage Users', 'Profile'];
-                                        break;
-                                    case 'crew': options = ['Dashboard', 'Current Order', 'Orders History', 'Profile'];
+                                    case 'driver': options = ['Dashboard', 'Current Order', 'Orders History', 'Profile'];
                                         break;
                                     default: options = ['Dashboard', 'Current Order', 'Orders History', 'Profile'];
                                         break;
                                 }
                                 dispatch({
                                     type: 'LOGGED_IN_USER',
-                                    payload: { firstName, lastName, dob, gender, email, contact, address, state, city, pinCode, role, _id, options, uaoptions, token: idToken }
+                                    payload: { firstName, lastName, dob, gender, email, contact, address, state, city, zipCode, role, _id, options, uaoptions, token: idToken }
                                 });
                                 rolebasedredirect(role);
                             } else {
@@ -111,20 +107,29 @@ const RegisterComplete = ({ profileUpdate }) => {
     }
 
     const handleCommon = async (token) => {
-        const userDetails = { firstName, lastName, dob, gender, contact, address, state, city, zipCode };
+        const userDetails = { firstName, lastName, dob, gender, contact, address, state, city, zipCode, role };
         await createOrUpdateUser(userDetails, token)
             .then((res) => {
                 if (res.status === 200) {
                     toast.success(res.data.message);
+                    setPassword('');
+                    setConfirmPassword('');
                 } else {
                     toast.error(res.data.message)
                 }
                 setLoading(false);
+                navigate('/');
             })
             .catch((error) => {
                 setLoading(false);
                 toast.error(error);
             });
+    }
+
+    const handleCheck = () => {
+        setPasswordUpdate(!passwordUpdate);
+        setPassword('');
+        setConfirmPassword('');
     }
 
     return (
@@ -146,34 +151,6 @@ const RegisterComplete = ({ profileUpdate }) => {
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder='abc@example.com'
                                         disabled
-                                    />
-                                </div>
-                            </div>
-                            <div className='form-group my-3 row p-0'>
-                                <label htmlFor='password' className='col-md-3 d-none d-md-block col-form-label text-end fw-bold fs-6'>Password</label>
-                                <div className='col-md-8 col-12 mb-3 mb-md-1 p-0'>
-                                    <input
-                                        id='password'
-                                        type='password'
-                                        className='form-control w-100'
-                                        value={password}
-                                        required
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder='Password'
-                                    />
-                                </div>
-                            </div>
-                            <div className='form-group my-3 row p-0'>
-                                <label htmlFor='confirm-password' className='col-md-3 d-none d-md-block col-form-label text-end fw-bold fs-6'>Confirm Password</label>
-                                <div className='col-md-8 col-12 mb-3 mb-md-1 p-0'>
-                                    <input
-                                        id='confirm-password'
-                                        type='password'
-                                        className='form-control w-100'
-                                        value={confirmPassword}
-                                        required
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                        placeholder='Confirm Password'
                                     />
                                 </div>
                             </div>
@@ -307,12 +284,48 @@ const RegisterComplete = ({ profileUpdate }) => {
                                     />
                                 </div>
                             </div>
+                            {profileUpdate && <div class='form-switch my-3 row p-0'>
+                                <label htmlFor='update-password' className='col-md-3 d-none d-md-block col-form-label text-end fw-bold fs-6'>Update Password</label>
+                                <div className='col-md-8 col-12 mb-3 mb-md-1 p-0 d-flex align-items-center text-start'>
+                                    <input class='form-check-input margin-left-zero' type='checkbox' role='switch' id='update-password' onChange={() => handleCheck()} />
+                                </div>
+                            </div>}
+                            {(!profileUpdate || passwordUpdate) && <>
+                                <div className='form-group my-3 row p-0'>
+                                    <label htmlFor='password' className='col-md-3 d-none d-md-block col-form-label text-end fw-bold fs-6'>Password</label>
+                                    <div className='col-md-8 col-12 mb-3 mb-md-1 p-0'>
+                                        <input
+                                            id='password'
+                                            type='password'
+                                            className='form-control w-100'
+                                            value={password}
+                                            required
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            placeholder='Password'
+                                        />
+                                    </div>
+                                </div>
+                                <div className='form-group my-3 row p-0'>
+                                    <label htmlFor='confirm-password' className='col-md-3 d-none d-md-block col-form-label text-end fw-bold fs-6'>Confirm Password</label>
+                                    <div className='col-md-8 col-12 mb-3 mb-md-1 p-0'>
+                                        <input
+                                            id='confirm-password'
+                                            type='password'
+                                            className='form-control w-100'
+                                            value={confirmPassword}
+                                            required
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            placeholder='Confirm Password'
+                                        />
+                                    </div>
+                                </div>
+                            </>}
                             <div className='form-group row p-0'>
                                 <div className='col-md-4 col-6 offset-md-3 text-start p-0'>
                                     <button
                                         className='btn btn-raised btn-filled'
                                         type='submit'
-                                        disabled={!email || password.length < 6 || !(password === confirmPassword) || !firstName || !lastName || !dob || !contact || !address || !city || !state || !zipCode}
+                                        disabled={!email || (passwordUpdate && password.length < 6 || !(password === confirmPassword)) || !firstName || !lastName || !dob || !contact || !address || !city || !state || !zipCode}
                                     >
                                         {btnTitle}
                                     </button>

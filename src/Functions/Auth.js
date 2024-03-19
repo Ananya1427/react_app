@@ -14,12 +14,12 @@ export const createOrUpdateUser = async (userDetails, idToken) => {
     )
 }
 
-export const checkUser = async (email, pathname) => {
+export const checkUser = async (email, role) => {
     return await axios.post(
         `${process.env.REACT_APP_API}/checkUserRole`,
         {
             email,
-            pathname
+            role
         }
     )
 }
@@ -41,6 +41,20 @@ export const currentUser = async (email, idToken) => {
 export const getUsers = async (idToken) => {
     return await axios.get(
         `${process.env.REACT_APP_API}/getUsers`,
+        {
+            headers: {
+                idToken
+            }
+        }
+    )
+}
+
+export const getUsersByRole = async (idToken, role) => {
+    return await axios.post(
+        `${process.env.REACT_APP_API}/getUsersByRole`,
+        {
+            role
+        },
         {
             headers: {
                 idToken
@@ -131,16 +145,11 @@ export const createOrUpdateCuisine = async (idToken, cuisineDetails) => {
     )
 }
 
-export const getCuisines = async (idToken, email) => {
+export const getCuisines = async (email) => {
     return await axios.post(
         `${process.env.REACT_APP_API}/getCuisines`,
         {
             email
-        },
-        {
-            headers: {
-                idToken
-            }
         }
     )
 }
@@ -151,6 +160,117 @@ export const getCuisine = async (idToken, email, title) => {
         {
             title,
             email
+        },
+        {
+            headers: {
+                idToken
+            }
+        }
+    )
+}
+
+export const getOrdersByDriver = async (idToken, email, driverStatus) => {
+    return await axios.post(
+        `${process.env.REACT_APP_API}/getOrdersByDriver`,
+        {
+            email,
+            driverStatus
+        },
+        {
+            headers: {
+                idToken
+            }
+        }
+    )
+}
+
+export const getOrdersByRestaurant = async (idToken, email, restaurantStatus) => {
+    return await axios.post(
+        `${process.env.REACT_APP_API}/getOrdersByRestaurant`,
+        {
+            email,
+            restaurantStatus
+        },
+        {
+            headers: {
+                idToken
+            }
+        }
+    )
+}
+
+export const getOrdersByUser = async (idToken, email, userOrderStatus) => {
+    return await axios.post(
+        `${process.env.REACT_APP_API}/getOrdersByUser`,
+        {
+            email,
+            userOrderStatus
+        },
+        {
+            headers: {
+                idToken
+            }
+        }
+    )
+}
+
+export const getRestaurantsByZip = async (zipCode) => {
+    return await axios.post(
+        `${process.env.REACT_APP_API}/getRestaurantsByZip`,
+        {
+            zipCode
+        }
+    )
+}
+
+export const createOrUpdateCart = async (idToken, cart) => {
+    return await axios.post(
+        `${process.env.REACT_APP_API}/createOrUpdateCart`,
+        {
+            cart
+        },
+        {
+            headers: {
+                idToken
+            }
+        }
+    )
+}
+
+export const getCart = async (idToken, orderdBy) => {
+    return await axios.post(
+        `${process.env.REACT_APP_API}/getCart`,
+        {
+            orderdBy
+        },
+        {
+            headers: {
+                idToken
+            }
+        }
+    )
+}
+
+export const createOrder = async (idToken, orderDetails) => {
+    return await axios.post(
+        `${process.env.REACT_APP_API}/createOrder`,
+        {
+            orderDetails
+        },
+        {
+            headers: {
+                idToken
+            }
+        }
+    )
+}
+
+export const modifyOrderStatus = async (idToken, orderObj, role) => {
+    return await axios.post(
+        `${process.env.REACT_APP_API}/modifyOrderStatus`,
+        {
+            orderObj,
+            role
         },
         {
             headers: {

@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css';
 import { auth } from './firebase';
-import { currentUser, getUsers, getCurrentRestaurant } from './Functions/Auth';
+import { currentUser, getCurrentRestaurant, getCart } from './Functions/Auth';
 import Nav from './Components/Nav';
 import Home from './Components/Home';
 import Login from './Pages/User/Login';
@@ -24,9 +24,16 @@ import Dashboard from './Pages/Partner/Dashboard';
 import CreateCuisine from './Pages/Partner/CreateCuisine';
 import ManageCuisines from './Pages/Partner/ManageCuisines';
 import ManageOrders from './Pages/Partner/ManageOrders';
-import OrdersHistory from './Pages/Partner/OrdersHistory';
 import AdminDashboard from './Pages/Admin/AdminDashboard';
 import ManageUsers from './Pages/Admin/ManageUsers';
+import DriverHome from './Pages/Driver/DriverHome';
+import DriverDashboard from './Pages/Driver/DriverDashboard';
+import Orders from './Pages/Driver/Orders';
+import RestauarntsHome from './Pages/User/RestaurantsHome';
+import RestaurantHome from './Pages/User/RestaurantHome';
+import Cart from './Pages/User/Cart';
+import UserDashboard from './Pages/User/UserDashboard';
+import UserOrders from './Pages/User/UserOrders';
 
 const App = () => {
 	const dispatch = useDispatch();
@@ -35,23 +42,6 @@ const App = () => {
 	const [navObj, setNavObj] = useState({});
 
 	useEffect(() => {
-		if (location.pathname.includes('partner')) {
-			setNavObj({
-				title: 'Flavor Chronicles for business',
-				buttonOne: 'Login to view your existing restaurants',
-				buttonTwo: 'Register your restaurant',
-				buttonOneRoute: 'partner-login',
-				buttonTwoRoute: 'create-partner-account',
-				positon: 'fixed-bottom'
-			})
-		} else {
-			setNavObj({
-				title: 'Flavor Chronicles',
-				buttonOne: 'Login',
-				buttonTwo: 'Create Account'
-			})
-		}
-
 		onAuthStateChanged(auth, async (user) => {
 			if (user && dispatch) {
 				const idTokenResult = await user.getIdTokenResult();
@@ -82,9 +72,9 @@ const App = () => {
 								const { firstName, lastName, dob, gender, email, contact, address, state, city, zipCode, role, _id } = res.data.user;
 								const { idToken } = res.config.headers;
 								switch (role) {
-									case 'admin': options = ['Dashboard', 'Add Restaurant', 'Manage Restaurants', 'Manage Users', 'Manage Profile'];
+									case 'admin': options = ['Dashboard', 'Add Restaurant', 'Manage Restaurants', 'Manage Users', 'Manage Drivers', 'Manage Profile'];
 										break;
-									case 'crew': options = ['Dashboard', 'Current Order', 'Orders History', 'Manage Profile'];
+									case 'driver': options = ['Dashboard', 'Current Order', 'Orders History', 'Manage Profile'];
 										break;
 									default: options = ['Dashboard', 'Current Order', 'Orders History', 'Manage Profile'];
 										break;
@@ -94,22 +84,32 @@ const App = () => {
 									payload: { firstName, lastName, dob, gender, email, contact, address, state, city, zipCode, role, _id, options, uaoptions, token: idToken }
 								});
 
-								if (role === 'crew') {
-									navigate('/crew-dashboard');
+								if (role === 'driver') {
+									navigate('/driver-dashboard');
 								}
-								else if (role === 'admin') {
-									getUsers(idTokenResult.token)
-										.then((res) => {
+								else if (role === 'admin') {		
+									getCart(idTokenResult.token, email)
+										.then(res => {
 											if (res.status === 200) {
 												dispatch({
-													type: 'REGISTERED_USERS',
-													payload: res.data.users
-												})
+													type: 'CART',
+													payload: res.data.cart
+												});
 											}
 										})
 										.catch((error) => toast.error(error))
 								}
 								else {
+									getCart(idTokenResult.token, email)
+										.then(res => {
+											if (res.status === 200) {
+												dispatch({
+													type: 'CART',
+													payload: res.data.cart
+												});
+											}
+										})
+										.catch((error) => toast.error(error))
 									navigate('/');
 								}
 							} else {
@@ -128,6 +128,33 @@ const App = () => {
 		})
 	}, [dispatch]);
 
+	useEffect(() => {
+		if (location.pathname.includes('partner')) {
+			setNavObj({
+				title: 'Flavor Chronicles for business',
+				buttonOne: 'Login to view your existing restaurants',
+				buttonTwo: 'Register your restaurant',
+				buttonOneRoute: 'partner-login',
+				buttonTwoRoute: 'create-partner-account',
+				positon: 'fixed-bottom'
+			})
+		} else if (location.pathname.includes('driver') || location.pathname.includes('drive')) {
+			setNavObj({
+				title: 'Flavor Chronicles Delivery',
+				buttonOne: 'Login',
+				buttonTwo: 'Create Account',
+				buttonOneRoute: 'driver-login',
+				buttonTwoRoute: 'create-driver-account',
+			})
+		} else {
+			setNavObj({
+				title: 'Flavor Chronicles',
+				buttonOne: 'Login',
+				buttonTwo: 'Create Account'
+			})
+		}
+	}, [location.pathname])
+
 	return (
 		<div className='App'>
 			{Object.keys(navObj).length && <Nav
@@ -136,23 +163,23 @@ const App = () => {
 			<ToastContainer />
 			<Routes>
 				<Route exact path='/' element={<Home />} />
-				<Route exact path='/login' element={<Login />} />
+				<Route exact path='/login' element={<Login title={'Login'} role={'user-or-admin'}/>} />
 				<Route exact path='/create-account' element={<Register />} />
 				<Route exact path='/register-complete' element={<RegisterComplete />} />
 				<Route exact path='/reset-password' element={<ResetPassword />} />
 				<Route exacr path='/partner-with-us' element={<PartnerHome />} />
-				<Route exact path='/create-partner-account' element={<Register title={'Partner Signup'} />} />
+				<Route exact path='/create-partner-account' element={<Register title={'Partner Signup'} role={'partner'} url={process.env.REACT_APP_PARTNER_REGISTER_REDIRECT_URL} />} />
 				<Route exact path='/partner-signup' element={<SignUp route={'/partner-signup'} disable={true} />} />
 				<Route exact path='/partner-signup/restaurant-type' element={<SignUpType route={'/partner-signup'} />} />
 				<Route exact path='/partner-signup/upload-images' element={<SignUpImages register={'signup'} />} />
-				<Route exact path='/partner-login' element={<Login title={'Partner Login'} />} />
+				<Route exact path='/partner-login' element={<Login title={'Partner Login'} role={'partner'} />} />
 				<Route exact path='/partner-dashboard' element={<Dashboard />} />
 				<Route exact path='/partner-create-cuisine' element={<CreateCuisine />} />
 				<Route exact path='/partner-update-cuisine/:slug' element={<CreateCuisine />} />
 				<Route exact path='/partner-manage-cuisines' element={<ManageCuisines />} />
-				<Route exact path='/partner-manage-orders' element={<ManageOrders />} />
-				<Route exact path='/partner-orders-history' element={<OrdersHistory />} />
-				<Route exact path='/partner-manage-profile' element={<SignUp route={'/partner-manage-profile'} disable={true} />} />
+				<Route exact path='/partner-manage-orders' element={<ManageOrders restaurantStatus={['Order Placed', 'Order Confirmed', 'Order Dispatched']} title={'Manage Orders'} />} />
+				<Route exact path='/partner-orders-history' element={<ManageOrders restaurantStatus={['Order Delivered', 'Order Declined']} title={'Orders History'} />} />
+				<Route exact path='/partner-manage-profile' element={<SignUp route={'/partner-manage-profile'} disable={true} profileUpdate={true} />} />
 				<Route exact path='/partner-manage-profile/restaurant-type' element={<SignUpType route={'/partner-manage-profile'} />} />
 				<Route exact path='/partner-manage-profile/upload-images' element={<SignUpImages register={'update'} />} />
 				<Route exact path='/admin-dashboard' element={<AdminDashboard statusModify={true} />} />
@@ -160,10 +187,26 @@ const App = () => {
 				<Route exact path='/admin-add-restaurant/restaurant-type' element={<SignUpType route={'/admin-add-restaurant'} />} />
 				<Route exact path='/admin-add-restaurant/upload-images' element={<SignUpImages register={'admin-signup'} />} />
 				<Route exact path='/admin-dashboard/:slug' element={<Dashboard statusModify={true} />} />
-				<Route exact path='/admin-manage-users' element={<ManageUsers />} />
+				<Route exact path='/admin-manage-users' element={<ManageUsers role={'user-or-admin'} title={'Manage Users'} />} />
+				<Route exact path='/admin-manage-drivers' element={<ManageUsers role={'driver'} title={'Manage Drivers'} />} />
 				<Route exact path='/admin-manage-restaurants' element={<AdminDashboard statusModify={false} />} />
 				<Route exact path='/admin-manage-restaurants/:slug' element={<Dashboard statusModify={false} />} />
-				<Route exact path='/admin-manage-profile' element={<RegisterComplete profileUpdate={true} />} />
+				<Route exact path='/admin-manage-profile' element={<RegisterComplete profileUpdate={true} role={'admin'} />} />
+				<Route exacr path='/drive-with-us' element={<DriverHome />} />
+				<Route exact path='/create-driver-account' element={<Register title={'Driver Signup'} role={'driver'} url={process.env.REACT_APP_DRIVER_REGISTER_REDIRECT_URL} />} />
+				<Route exact path='/driver-register-complete' element={<RegisterComplete title={'Driver Signup'} role={'driver'} />} />
+				<Route exact path='/driver-login' element={<Login title={'Driver Login'} role={'driver'} />} />
+				<Route exact path='/driver-dashboard' element={<DriverDashboard />} />
+				<Route exact path='/driver-current-order' element={<Orders title={'Current Orders'} driverStatus={['Order Placed', 'Order Confirmed', 'Order Dispatched']} />} />
+				<Route exact path='/driver-orders-history' element={<Orders title={'Orders History'} driverStatus={['Order Delivered', 'Order Declined']} />} />
+				<Route exact path='/driver-manage-profile' element={<RegisterComplete profileUpdate={true} role={'driver'} />} />
+				<Route exact path='/restaurants/:zipcode/:slug' element={<RestaurantHome />} />
+				<Route exact path='/restaurants/:slug' element={<RestauarntsHome />} />
+				<Route exact path='/cart' element={<Cart />} />
+				<Route exact path='/user-dashboard' element={<UserDashboard />} />
+				<Route exact path='/user-manage-profile' element={<RegisterComplete profileUpdate={true} />} />
+				<Route exact path='/user-current-order' element={<UserOrders title={'Current Orders'} userOrderStatus={['Order Placed', 'Order Confirmed', 'Order Dispatched']} />} />
+				<Route exact path='/user-orders-history' element={<UserOrders title={'Orders History'} userOrderStatus={['Order Delivered', 'Order Declined']} />} />
 			</Routes>
 		</div>
 	);

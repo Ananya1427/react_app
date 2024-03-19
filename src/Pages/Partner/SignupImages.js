@@ -24,7 +24,7 @@ const SignUpImages = ({ register }) => {
 
     const validateStates = () => {
         let bool;
-        if (menuImages?.length > 0 && restaurantImages?.length > 0 && foodImages?.length > 0) {
+        if (!menuImages?.urls?.length > 0 || !restaurantImages?.urls?.length > 0 || !foodImages?.urls?.length > 0) {
             bool = true;
         } else {
             bool = false;

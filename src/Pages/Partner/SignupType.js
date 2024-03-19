@@ -56,7 +56,7 @@ const SignUpType = ({ route }) => {
 
     const validateStates = () => {
         let bool;
-        if (establishmentType && outletType?.length > 0 && cuisineType?.length > 0 && opensAt && closesAt && weekDays?.length > 0) {
+        if (!establishmentType || !outletType?.length > 0 || !cuisineType?.length > 0 || !opensAt || !closesAt || !weekDays?.length > 0) {
             bool = true;
         } else {
             bool = false;
@@ -99,37 +99,37 @@ const SignUpType = ({ route }) => {
                                 <div className='col-12 my-3 mb-md-1 px-3 text-start row'>
                                     <h6 className='text-start'>Select options which best describe your outlet</h6>
                                     <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                        <input className='form-check-input me-3' type='checkbox' value='' id='bakery' onChange={(e) => handleOutletType(e)} checked={outletType.includes('bakery')} />
+                                        <input className='form-check-input me-3' type='checkbox' value='' id='bakery' onChange={(e) => handleOutletType(e)} checked={outletType?.includes('bakery')} />
                                         <label className='form-check-label' for='bakery'>
                                             Bakery
                                         </label>
                                     </div>
                                     <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                        <input className='form-check-input me-3' type='checkbox' value='' id='beverage-shop' onChange={(e) => handleOutletType(e)} checked={outletType.includes('beverage-shop')} />
+                                        <input className='form-check-input me-3' type='checkbox' value='' id='beverage-shop' onChange={(e) => handleOutletType(e)} checked={outletType?.includes('beverage-shop')} />
                                         <label className='form-check-label' for='beverage-shop'>
                                             Beverage Shop
                                         </label>
                                     </div>
                                     <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                        <input className='form-check-input me-3' type='checkbox' value='' id='café' onChange={(e) => handleOutletType(e)} checked={outletType.includes('café')} />
+                                        <input className='form-check-input me-3' type='checkbox' value='' id='café' onChange={(e) => handleOutletType(e)} checked={outletType?.includes('café')} />
                                         <label className='form-check-label' for='café'>
                                             Café
                                         </label>
                                     </div>
                                     <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                        <input className='form-check-input me-3' type='checkbox' value='' id='casual-dining' onChange={(e) => handleOutletType(e)} checked={outletType.includes('casual-dining')} />
+                                        <input className='form-check-input me-3' type='checkbox' value='' id='casual-dining' onChange={(e) => handleOutletType(e)} checked={outletType?.includes('casual-dining')} />
                                         <label className='form-check-label' for='casual-dining'>
                                             Casual Dining
                                         </label>
                                     </div>
                                     <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                        <input className='form-check-input me-3' type='checkbox' value='' id='club' onChange={(e) => handleOutletType(e)} checked={outletType.includes('club')} />
+                                        <input className='form-check-input me-3' type='checkbox' value='' id='club' onChange={(e) => handleOutletType(e)} checked={outletType?.includes('club')} />
                                         <label className='form-check-label' for='club'>
                                             Club
                                         </label>
                                     </div>
                                     <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                        <input className='form-check-input me-3' type='checkbox' value='' id='cocktail-bar' onChange={(e) => handleOutletType(e)} checked={outletType.includes('cocktail-bar')} />
+                                        <input className='form-check-input me-3' type='checkbox' value='' id='cocktail-bar' onChange={(e) => handleOutletType(e)} checked={outletType?.includes('cocktail-bar')} />
                                         <label className='form-check-label' for='cocktail-bar'>
                                             Cocktail Bar
                                         </label>
@@ -141,37 +141,37 @@ const SignUpType = ({ route }) => {
                                 <h6 className='text-start'>Type of cuisines</h6>
                                 <p className='fw-light text-start m-0'>Select options which best describe food your serve</p>
                                 <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                    <input className='form-check-input me-3' type='checkbox' value='afghan' id='afghan' onChange={(e) => handleCuisines(e)} checked={cuisineType.includes('afghan')} />
+                                    <input className='form-check-input me-3' type='checkbox' value='afghan' id='afghan' onChange={(e) => handleCuisines(e)} checked={cuisineType?.includes('afghan')} />
                                     <label className='form-check-label' for='afghan'>
                                         Afghan
                                     </label>
                                 </div>
                                 <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                    <input className='form-check-input me-3' type='checkbox' value='african' id='african' onChange={(e) => handleCuisines(e)} checked={cuisineType.includes('african')} />
+                                    <input className='form-check-input me-3' type='checkbox' value='african' id='african' onChange={(e) => handleCuisines(e)} checked={cuisineType?.includes('african')} />
                                     <label className='form-check-label' for='african'>
                                         African
                                     </label>
                                 </div>
                                 <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                    <input className='form-check-input me-3' type='checkbox' value='' id='american' onChange={(e) => handleCuisines(e)} checked={cuisineType.includes('american')} />
+                                    <input className='form-check-input me-3' type='checkbox' value='' id='american' onChange={(e) => handleCuisines(e)} checked={cuisineType?.includes('american')} />
                                     <label className='form-check-label' for='american'>
                                         American
                                     </label>
                                 </div>
                                 <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                    <input className='form-check-input me-3' type='checkbox' value='' id='andhra' onChange={(e) => handleCuisines(e)} checked={cuisineType.includes('andhra')} />
+                                    <input className='form-check-input me-3' type='checkbox' value='' id='andhra' onChange={(e) => handleCuisines(e)} checked={cuisineType?.includes('andhra')} />
                                     <label className='form-check-label' for='andhra'>
                                         Andhra
                                     </label>
                                 </div>
                                 <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                    <input className='form-check-input me-3' type='checkbox' value='' id='arabian' onChange={(e) => handleCuisines(e)} checked={cuisineType.includes('arabian')} />
+                                    <input className='form-check-input me-3' type='checkbox' value='' id='arabian' onChange={(e) => handleCuisines(e)} checked={cuisineType?.includes('arabian')} />
                                     <label className='form-check-label' for='arabian'>
                                         Arabian
                                     </label>
                                 </div>
                                 <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                    <input className='form-check-input me-3' type='checkbox' value='' id='armenian' onChange={(e) => handleCuisines(e)} checked={cuisineType.includes('armenian')} />
+                                    <input className='form-check-input me-3' type='checkbox' value='' id='armenian' onChange={(e) => handleCuisines(e)} checked={cuisineType?.includes('armenian')} />
                                     <label className='form-check-label' for='armenian'>
                                         Armenian
                                     </label>
@@ -214,43 +214,43 @@ const SignUpType = ({ route }) => {
                                     <h6 className='text-start'>Mark open days</h6>
                                     <p className='fw-light text-start m-0'>Don't forget to uncheck your off-day</p>
                                     <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                        <input className='form-check-input me-3' type='checkbox' value='' id='sunday' onChange={(e) => handleWeekDays(e)} checked={weekDays.includes('sunday')} />
+                                        <input className='form-check-input me-3' type='checkbox' value='' id='sunday' onChange={(e) => handleWeekDays(e)} checked={weekDays?.includes('sunday')} />
                                         <label className='form-check-label' for='sunday'>
                                             Sunday
                                         </label>
                                     </div>
                                     <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                        <input className='form-check-input me-3' type='checkbox' value='' id='monday' onChange={(e) => handleWeekDays(e)} checked={weekDays.includes('monday')} />
+                                        <input className='form-check-input me-3' type='checkbox' value='' id='monday' onChange={(e) => handleWeekDays(e)} checked={weekDays?.includes('monday')} />
                                         <label className='form-check-label' for='monday'>
                                             Monday
                                         </label>
                                     </div>
                                     <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                        <input className='form-check-input me-3' type='checkbox' value='' id='tuesday' onChange={(e) => handleWeekDays(e)} checked={weekDays.includes('tuesday')} />
+                                        <input className='form-check-input me-3' type='checkbox' value='' id='tuesday' onChange={(e) => handleWeekDays(e)} checked={weekDays?.includes('tuesday')} />
                                         <label className='form-check-label' for='tuesday'>
                                             Tuesday
                                         </label>
                                     </div>
                                     <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                        <input className='form-check-input me-3' type='checkbox' value='' id='wednesday' onChange={(e) => handleWeekDays(e)} checked={weekDays.includes('wednesday')} />
+                                        <input className='form-check-input me-3' type='checkbox' value='' id='wednesday' onChange={(e) => handleWeekDays(e)} checked={weekDays?.includes('wednesday')} />
                                         <label className='form-check-label' for='wednesday'>
                                             Wednesday
                                         </label>
                                     </div>
                                     <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                        <input className='form-check-input me-3' type='checkbox' value='' id='thursday' onChange={(e) => handleWeekDays(e)} checked={weekDays.includes('thursday')} />
+                                        <input className='form-check-input me-3' type='checkbox' value='' id='thursday' onChange={(e) => handleWeekDays(e)} checked={weekDays?.includes('thursday')} />
                                         <label className='form-check-label' for='thursday'>
                                             Thursday
                                         </label>
                                     </div>
                                     <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                        <input className='form-check-input me-3' type='checkbox' value='' id='friday' onChange={(e) => handleWeekDays(e)} checked={weekDays.includes('friday')} />
+                                        <input className='form-check-input me-3' type='checkbox' value='' id='friday' onChange={(e) => handleWeekDays(e)} checked={weekDays?.includes('friday')} />
                                         <label className='form-check-label' for='friday'>
                                             Friday
                                         </label>
                                     </div>
                                     <div className='col-4 my-3 mb-md-1 px-3 text-start'>
-                                        <input className='form-check-input me-3' type='checkbox' value='' id='saturday' onChange={(e) => handleWeekDays(e)} checked={weekDays.includes('saturday')} />
+                                        <input className='form-check-input me-3' type='checkbox' value='' id='saturday' onChange={(e) => handleWeekDays(e)} checked={weekDays?.includes('saturday')} />
                                         <label className='form-check-label' for='saturday'>
                                             Saturday
                                         </label>

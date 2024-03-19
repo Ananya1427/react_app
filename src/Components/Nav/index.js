@@ -8,20 +8,24 @@ import { auth } from '../../firebase';
 import './index.css';
 
 const Nav = ({ obj }) => {
+    const { user, restaurant, cart } = useSelector(state => ({ ...state }));
     const { title, buttonOne, buttonTwo, buttonOneRoute, buttonTwoRoute } = obj;
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const location = useLocation();
-    const { user, restaurant } = useSelector(state => ({ ...state }));
 
     const [loading, setLoading] = useState(false);
     const [header, setHeader] = useState('Welcome!');
     const [options, setOptions] = useState('');
+    const [count, setCount] = useState(0);
 
     useEffect(() => {
         setHeader(user || restaurant ? `Welcome ${user?.firstName || restaurant?.restaurantName}!` : 'Welcome!');
         setOptions(user?.options || restaurant?.options);
-    }, [user, restaurant])
+        if (cart) {
+            setCount(cart?.cartQuantity);
+        }
+    }, [user, restaurant, cart])
 
     const handleRoute = (option) => {
         let routes = option.split(' ');
@@ -36,10 +40,12 @@ const Nav = ({ obj }) => {
 
     const handleNavRoute = (option) => {
         let route;
-        if(option === 'Flavor Chronicles') {
-            route = '/';
-        } else {
+        if(option === 'Flavor Chronicles for business') {
             route = '/partner-with-us';
+        } else if (option === 'Flavor Chronicles Delivery') {
+            route = '/drive-with-us';
+        } else {
+            route = '/';
         }
         return route;
     }
@@ -73,7 +79,7 @@ const Nav = ({ obj }) => {
                         <span><i className='bi bi-person'></i></span>
                     </button>
                     <button className='navbar-toggler mx-md-3 mx-2' type='button'>
-                        <Link className='text-decoration-none custom-text-color d-flex w-100' to={'/cart'}><span><i className='bi bi-cart'></i></span></Link>
+                        <Link className='text-decoration-none custom-text-color d-flex w-100' to={'/cart'}><span><i className='bi bi-cart'></i></span><span className='position-top'>{count}</span></Link>
                     </button>
 
                     <div className='offcanvas offcanvas-end text-bg-light' tabIndex='-1' id='offcanvaslightNavbarOuter' aria-labelledby='offcanvaslightNavbarOuterLabel'>

@@ -4,8 +4,8 @@ import BottomNav from '../../Components/BottomNav';
 import SideNav from './SideNav';
 import { useSelector } from 'react-redux';
 
-const SignUp = ({ route, disable }) => {
-    const { signup, restaurant } = useSelector((state) => ({...state}));
+const SignUp = ({ route, disable, profileUpdate=false }) => {
+    const { signup, restaurant } = useSelector((state) => ({ ...state }));
     const [restaurantName, setRestaurantName] = useState(signup?.restaurantName || '');
     const [address, setAddress] = useState(signup?.address || '');
     const [state, setState] = useState(signup?.state || '');
@@ -19,11 +19,12 @@ const SignUp = ({ route, disable }) => {
     const [password, setPassword] = useState(signup?.password || '');
     const [confirmPassword, setConfirmPassword] = useState(signup?.confirmPassword || '');
     const [href, setHref] = useState('');
+    const [updatePassword, setUpdatePassword] = useState(false);
 
     useEffect(() => {
         setEmail(window.localStorage.getItem('email') || '');
         setHref(window.location.href || '');
-        if (restaurant) {
+        if (profileUpdate && restaurant) {
             setRestaurantName(restaurant?.restaurantName);
             setAddress(restaurant?.address);
             setState(restaurant?.state);
@@ -33,17 +34,24 @@ const SignUp = ({ route, disable }) => {
             setOwnerContact(restaurant?.ownerContact);
             setFirstName(restaurant?.firstName);
             setLastName(restaurant?.lastName);
+            setEmail(restaurant?.email);
         }
-    }, [restaurant])
+    }, [profileUpdate && restaurant])
 
     const validateStates = () => {
         let bool;
-        if (restaurantName && address && state && city && zipCode && restaurantContact && ownerContact && firstName && lastName && email && password && confirmPassword && (password === confirmPassword)) {
+        if (!restaurantName || !address || !state || !city || !zipCode || !restaurantContact || !ownerContact || !firstName || !lastName || !email || (updatePassword && password.length < 6 || !(password === confirmPassword))) {
             bool = true;
         } else {
             bool = false
         }
         return bool;
+    }
+
+    const handleCheck = () => {
+        setUpdatePassword(!updatePassword);
+        setPassword('');
+        setConfirmPassword('');
     }
 
     return (
@@ -171,28 +179,34 @@ const SignUp = ({ route, disable }) => {
                                         placeholder='Owner Email Address'
                                     />
                                 </div>
-                                <div className='col-6 my-3 mb-md-1 px-3'>
-                                    <input
-                                        id='password'
-                                        type='password'
-                                        className='form-control w-100'
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder='Password'
-                                        required
-                                    />
-                                </div>
-                                <div className='col-6 my-3 mb-md-1 px-3'>
-                                    <input
-                                        id='confirm-password'
-                                        type='password'
-                                        className='form-control w-100'
-                                        value={confirmPassword}
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                        placeholder='Confirm Password'
-                                        required
-                                    />
-                                </div>
+                                {profileUpdate && <div class='form-switch col-12 input-group my-3 mb-md-1 px-3'>
+                                    <label htmlFor='update-password' className='fs-6 pe-2 h6'>Update Password</label>
+                                    <input class='form-check-input margin-left-zero px-2 rounded' type='checkbox' role='switch' id='update-password' onChange={() => handleCheck()} />
+                                </div>}
+                                {(!profileUpdate || updatePassword) && <>
+                                    <div className='col-6 my-3 mb-md-1 px-3'>
+                                        <input
+                                            id='password'
+                                            type='password'
+                                            className='form-control w-100'
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            placeholder='Password'
+                                            required
+                                        />
+                                    </div>
+                                    <div className='col-6 my-3 mb-md-1 px-3'>
+                                        <input
+                                            id='confirm-password'
+                                            type='password'
+                                            className='form-control w-100'
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            placeholder='Confirm Password'
+                                            required
+                                        />
+                                    </div> </>
+                                }
                             </div>
                         </form>
                     </div>

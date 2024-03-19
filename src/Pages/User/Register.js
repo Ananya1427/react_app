@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { sendSignInLinkToEmail } from 'firebase/auth';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import './Auth.css';
 import { auth } from '../../firebase';
 import { checkUser } from '../../Functions/Auth';
 
-const Register = ({ title }) => {
+const Register = ({ title, role='user', url }) => {
     const navigate = useNavigate();
-    const location = useLocation();
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -17,13 +16,13 @@ const Register = ({ title }) => {
         e.preventDefault();
         setLoading(true);
 
-        checkUser(email, location.pathname.includes('partner'))
+        checkUser(email, role)
             .then((res) => {
                 if (res.status === 200) {
                     userRedirect(res.data.role, res.data.pathname);
                 } else {
                     const config = {
-                        url: location.pathname.includes('partner') ? process.env.REACT_APP_PARTNER_REGISTER_REDIRECT_URL : process.env.REACT_APP_REGISTER_REDIRECT_URL,
+                        url: url || process.env.REACT_APP_REGISTER_REDIRECT_URL,
                         handleCodeInApp: true,
                     };
                     sendSignInLinkToEmail(auth, email, config)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { toast } from 'react-toastify';
@@ -10,7 +10,7 @@ import { checkUser, currentUser, getCurrentRestaurant } from '../../Functions/Au
 
 import './Auth.css';
 
-const Login = ({ title }) => {
+const Login = ({ title, role }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
@@ -18,10 +18,15 @@ const Login = ({ title }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [loginTitle, setLoginTitle] = useState('');
+    
+    useEffect(() => {
+        setLoginTitle(title);
+    }, [title])
 
     const rolebasedredirect = (role) => {
-        if (role === 'admin') {
-            navigate('/');
+        if (role === 'driver') {
+            navigate('/driver-home');
         } else if (role === 'partner') {
             navigate('/partner-home');
         } else {
@@ -32,7 +37,7 @@ const Login = ({ title }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        checkUser(email, location.pathname.includes('partner'))
+        checkUser(email, role)
             .then(res => {
                 if (res.status === 202) {
                     toast.error(res.data.message);
@@ -69,22 +74,23 @@ const Login = ({ title }) => {
         currentUser(user.email, idTokenResult.token)
             .then((res) => {
                 if (res.status === 200) {
-                    const { firstName, lastName, dob, gender, email, contact, address, state, city, pinCode, role, _id } = res.data.user;
+                    const { firstName, lastName, dob, gender, email, contact, address, state, city, zipCode, role, _id } = res.data.user;
                     toast.success(`Welcome ${firstName}! `);
                     const { idToken } = res.config.headers;
                     switch (role) {
-                        case 'admin': options = ['Dashboard', 'Add Restaurant', 'Manage Restaurants', 'Manage Users', 'Manage Profile'];
+                        case 'admin': options = ['Dashboard', 'Add Restaurant', 'Manage Restaurants', 'Manage Users', 'Manage Drivers', 'Manage Profile'];
                             break;
-                        case 'crew': options = ['Dashboard', 'Current Order', 'Orders History', 'Manage Profile'];
+                        case 'driver': options = ['Dashboard', 'Current Order', 'Orders History', 'Manage Profile'];
                             break;
                         default: options = ['Dashboard', 'Current Order', 'Orders History', 'Manage Profile'];
                             break;
                     }
                     dispatch({
                         type: 'LOGGED_IN_USER',
-                        payload: { firstName, lastName, dob, gender, email, contact, address, state, city, pinCode, role, _id, options, uaoptions, token: idToken }
+                        payload: { firstName, lastName, dob, gender, email, contact, address, state, city, zipCode, role, _id, options, uaoptions, token: idToken }
                     });
                     rolebasedredirect(role);
+                    // navigate(-1);
                 } else {
                     toast.error(res.data.message);
                 }
@@ -106,7 +112,8 @@ const Login = ({ title }) => {
                         type: 'LOGGED_IN_RESTAURANT',
                         payload: { restaurantName, address, state, city, zipCode, restaurantContact, ownerContact, firstName, lastName, email, establishmentType, outletType, cuisines, weekDays, opensAt, closesAt, menuImages, restaurantImages, foodImages, status, _id, options, token: idToken }
                     });
-                    rolebasedredirect('partner');
+                    // rolebasedredirect('partner');
+                    navigate(-1);
                 } else {
                     toast.error(res.data.message);
                 }
@@ -120,7 +127,7 @@ const Login = ({ title }) => {
                 <div className='col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-10 offset-1 shadow p-lg-5 p-md-4 p-3'>
                     <form onSubmit={handleSubmit} className='container-fluid'>
                         <div className='form-group mb-4 text-center'>
-                            {loading ? <h3>Loading...</h3> : <h3>{title || 'Login'}</h3>}
+                            {loading ? <h3>Loading...</h3> : <h3>{loginTitle}</h3>}
                         </div>
                         <div className='form-group my-3 row p-0'>
                             <label htmlFor='email' className='col-md-3 d-none d-md-block col-form-label text-end fw-bold fs-6'>Email</label>

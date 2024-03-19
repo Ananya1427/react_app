@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import './Card.css';
 import Modal from './Modal';
 
-const ProductCard = ({ product, handleClickEvent }) => {
+const ProductCard = ({ product, handleClickEvent, email }) => {
     const { cart } = useSelector(state => ({ ...state }));
     const location = useLocation();
 
@@ -31,7 +31,8 @@ const ProductCard = ({ product, handleClickEvent }) => {
     }
 
     const fetchCountFromCart = () => {
-        let item = cart && cart.products.find(prod => prod.productId === product._id);
+        let index = cart && cart?.items?.length > 0 && cart?.items?.findIndex(prod => prod.orderFrom === email);
+        let item = cart?.items[index]?.cuisines?.find(item => item.cuisineId === product._id)
         setCount(item && item.count || 0);
         setSelection(item && item.count || 0);
     }

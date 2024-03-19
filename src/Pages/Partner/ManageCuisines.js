@@ -8,12 +8,11 @@ import { useSelector } from 'react-redux';
 const ManageCuisines = () => {
     const { restaurant } = useSelector((state) => ({...state}));
 
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [cuisines, setCuisines] = useState([]);
 
     useEffect(() => {
-        setLoading(true);
-        getCuisines(restaurant?.token, restaurant?.email)
+        getCuisines(restaurant?.email)
             .then(res => {
                 if (res.status === 200) {
                     toast.success(res.data.message);
@@ -43,6 +42,7 @@ const ManageCuisines = () => {
                                     key={prod._id}
                                     product={prod}
                                     handleClickEvent={handleDeleteProduct}
+                                    email={restaurant?.email}
                                 />)
                             }
                         </div>

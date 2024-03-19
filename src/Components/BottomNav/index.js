@@ -18,7 +18,7 @@ const BottomNav = ({ validateStates, obj, nextRoute, prevRoute, register = false
     }
 
     const handleNext = async () => {
-        if (validateStates) {
+        if (!validateStates) {
             dispatch({
                 type: 'SIGN_UP',
                 payload: { ...signup, ...obj }
@@ -100,8 +100,8 @@ const BottomNav = ({ validateStates, obj, nextRoute, prevRoute, register = false
     return (
         <nav className={`navbar navbar-light shadow-lg fixed-bottom navbar-bottom`}>
             <div className='container'>
-                <button type='button' className={`btn btn-pat-auth-filled ml-20`} onClick={handleBack}>Go Back</button>
-                <button type='button' className={`btn btn-pat-auth-hollow mr-20 ${!validateStates && 'not-allowed'}`} onClick={handleNext}>Next</button>
+                <button className={`btn btn-pat-auth-filled ml-20`} onClick={handleBack}>Go Back</button>
+                <button className={`btn btn-pat-auth-hollow mr-20`} disabled={validateStates} onClick={handleNext}>Next</button>
             </div>
         </nav>
     )

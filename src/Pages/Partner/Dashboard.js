@@ -8,11 +8,10 @@ const Dashboard = ({ statusModify }) => {
     const { restaurant, user } = useSelector((state) => ({ ...state }));
     const params = useParams();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [restaurantDet, setRestaurantDet] = useState('');
 
     useEffect(() => {
-        setLoading(true)
         if (restaurant) {
             setRestaurantDet(restaurant);
             setLoading(false);
@@ -32,7 +31,7 @@ const Dashboard = ({ statusModify }) => {
                     setLoading(false);
                 })
         }
-    }, [restaurant, user])
+    }, [statusModify, restaurant, user])
 
     const handleRestaurantStatus = (e, status) => {
         e.preventDefault();
@@ -49,16 +48,19 @@ const Dashboard = ({ statusModify }) => {
             .catch(error => {
                 toast.error(error);
             })
-            setLoading(false);
+        setLoading(false);
     }
+
+    const sorter = {
+        'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3, 'thursday': 4, 'friday': 5, 'saturday': 6,
+    };
 
     return (
         <div className='row mt-5 pt-5 mx-md-2 d-flex justify-content-center'>
             <div className='col-lg-8 col-10 px-md-4 px-3 shadow'>
                 {
-                    loading ? <h3 className='text-center mb-3'>Loading...</h3> :
+                    loading ? <h3 className='text-center m-3'>Loading...</h3> :
                         <form className='row px-lg-5 py-lg-3 d-flex justify-content-center'>
-                            {console.log('Check--> ', restaurantDet)}
                             <h3 className='text-center mb-3'>{restaurantDet?.restaurantName}</h3>
                             <div className='col-lg-6 col-md-10 col-12 text-start px-5'>
                                 <label className='col-form-label text-start fw-bold fs-6'>Contact:</label>
@@ -75,19 +77,19 @@ const Dashboard = ({ statusModify }) => {
                             <div className='col-lg-6 col-md-10 col-12 text-start px-5'>
                                 <label className='col-form-label text-start fw-bold fs-6'>Outlet Type:</label>
                                 <span className='ps-2'>
-                                    {restaurantDet?.outletType?.join(', ')}
+                                    {restaurantDet?.outletType?.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(', ')}
                                 </span>
                             </div>
                             <div className='col-lg-6 col-md-10 col-12 text-start px-5'>
                                 <label className='col-form-label text-start fw-bold fs-6'>Cuisines:</label>
                                 <span className='ps-2'>
-                                    {restaurantDet?.cuisineType?.join(', ')}
+                                    {restaurantDet?.cuisineType?.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(', ')}
                                 </span>
                             </div>
                             <div className='col-lg-6 col-md-10 col-12 text-start px-5'>
                                 <label className='col-form-label text-start fw-bold fs-6'>Establishment Type:</label>
                                 <span className='ps-2'>
-                                    {restaurantDet?.establishmentType}
+                                    {restaurantDet?.establishmentType?.split('-and-').map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(', ')}
                                 </span>
                             </div>
                             <div className='col-lg-6 col-md-10 col-12 text-start px-5'>
@@ -99,7 +101,7 @@ const Dashboard = ({ statusModify }) => {
                             <div className='col-lg-6 col-md-10 col-12 text-start px-5'>
                                 <label className='col-form-label text-start fw-bold fs-6'>Days Open:</label>
                                 <span className='ps-2'>
-                                    {restaurantDet?.weekDays?.join(', ')}
+                                    {restaurantDet?.weekDays?.sort((a, b) => sorter[a] - sorter[b])?.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(', ')}
                                 </span>
                             </div>
                             <div className='col-lg-6 col-md-10 col-12 text-start px-5'>
