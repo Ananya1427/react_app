@@ -24,6 +24,8 @@ const Nav = ({ obj }) => {
         setOptions(user?.options || restaurant?.options);
         if (cart) {
             setCount(cart?.cartQuantity);
+        } else {
+            setCount(0);
         }
     }, [user, restaurant, cart])
 
