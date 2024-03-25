@@ -7,7 +7,7 @@ const StatusModal = ({ order, obj, drivers, onClickEvent }) => {
         let name = '';
         let email = '';
         let arr;
-        if (selection === '-None') {
+        if (selection !== '-None') {
             arr = selection?.split('-');
             name = arr[1].concat(' ', arr[2]);
             email = arr[0];

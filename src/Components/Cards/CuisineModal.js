@@ -1,9 +1,9 @@
 import React from 'react';
 
-const CuisineModal = ({ btnTitle, title, product, onClickEvent }) => {
+const CuisineModal = ({ btnTitle, title, product, onClickEvent, status }) => {
 
     const handleClick = () => {
-        onClickEvent(product);
+        onClickEvent(product, status);
     }
 
     return (

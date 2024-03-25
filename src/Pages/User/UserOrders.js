@@ -37,7 +37,6 @@ const UserOrders = ({ title, userOrderStatus }) => {
                         <form className='row px-lg-3 py-lg-3 d-flex justify-content-center'>
                             <h3 className='text-center mb-3'>{title}</h3>
                             <div className='row p-3'>
-                                {console.log('Check--> ', ordersDet)}
                                 {ordersDet?.length > 0 && ordersDet?.map(order =>
                                     <ul className='list-group p-4 my-2 shadow'>
                                         <li className='border-0 p-0 m-0 row'>

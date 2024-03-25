@@ -99,7 +99,6 @@ const ManageOrders = ({ restaurantStatus, title }) => {
                 {loading ? <h3 className='text-center m-3'>Loading...</h3> :
                     <form onSubmit={''} className='row px-lg-5 py-lg-3 d-flex justify-content-center'>
                         <h3 className='text-center mb-3'>{title}</h3>
-                        {console.log('Check--> ', updateStatus)}
                         <div className='row p-2'>
                             {ordersDet?.length > 0 && ordersDet?.map((order, index) =>
                                 <ul className='list-group p-4 my-2 shadow'>
@@ -167,7 +166,7 @@ const ManageOrders = ({ restaurantStatus, title }) => {
                                                         {order?.orderStatus?.driver}
                                                     </span>
                                                 </li>
-                                                {!(['Order Delivered', 'Order Declined'].includes(order?.orderStatus?.restaurant)) &&
+                                                {!(['Order Delivered', 'Order Declined'].includes(order?.orderStatus?.restaurant)) && (order?.orderStatus?.driver === 'Order Confirmed') &&
                                                     <>
                                                         <li className='form-switch list-group-item bg-transparent p-0 m-0 border-0 w-100 text-start d-flex align-items-center'>
                                                             <label htmlFor='update-order-status' className='col-form-label text-start fw-bold fs-6'>Update Order Status</label>

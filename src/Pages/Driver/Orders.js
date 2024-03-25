@@ -35,26 +35,26 @@ const Orders = ({ title, driverStatus }) => {
         }
     }, [title, user])
 
-    const handleDeleteProduct = (order) => {
+    const handleDeleteProduct = (order, status) => {
         let assignObj = {};
         let statusObj = {};
         const { orderdBy, _id, orderStatus, assignedTo } = order;
-        switch (str) {
+        switch (status) {
             case 'Order Confirmed':
                 assignObj = { ...assignedTo };
-                statusObj = { ...orderStatus, driver: str };
+                statusObj = { ...orderStatus, driver: status };
                 break;
             case 'Order Declined':
                 assignObj = { name: '', email: '' }
-                statusObj = { ...orderStatus, driver: str };
+                statusObj = { ...orderStatus, driver: status };
                 break;
             case 'Order Delivered':
                 assignObj = { ...assignedTo };
-                statusObj = { restaurant: str, driver: str };
+                statusObj = { restaurant: status, driver: status };
                 break;
             default:
                 assignObj = { ...assignedTo };
-                statusObj = { ...orderStatus, driver: str };
+                statusObj = { ...orderStatus, driver: status };
                 break;
         }
         setLoading(true);
@@ -74,8 +74,8 @@ const Orders = ({ title, driverStatus }) => {
             })
     }
 
-    const handleModifyStatus = (e, order, status) => {
-        handleOrderStatus(e, status, order);
+    const handleModifyStatus = (order, status) => {
+        handleDeleteProduct(order, status);
         setUpdateStatus({});
     }
 
@@ -159,7 +159,7 @@ const Orders = ({ title, driverStatus }) => {
                                                             {order?.orderStatus?.driver}
                                                         </span>
                                                     </li>
-                                                    {(order?.orderStatus?.driver !== 'Order Delivered') && <li className='form-switch list-group-item bg-transparent p-0 m-0 border-0 w-100 text-start d-flex align-items-center'>
+                                                    {(order?.orderStatus?.driver !== 'Order Delivered') && (order?.orderStatus?.restaurant === 'Order Dispatched') && <li className='form-switch list-group-item bg-transparent p-0 m-0 border-0 w-100 text-start d-flex align-items-center'>
                                                         <label htmlFor='update-order-status' className='col-form-label text-start fw-bold fs-6'>Update Order Status</label>
                                                         <input class='form-check-input mx-2 rounded' type='checkbox' role='switch' id='update-order-status' onChange={() => setUpdateStatus({ ...updateStatus, [index]: !updateStatus[index] })} />
                                                     </li>}
@@ -173,13 +173,14 @@ const Orders = ({ title, driverStatus }) => {
                                                         >
                                                             {['Order Confirmed', 'Order Delivered']?.map(option => <option key={option} value={option} selected={option === order?.orderStatus?.driver}>{option}</option>)}
                                                         </select>
-                                                        <button className='btn btn-filled mx-2 my-0' disabled={status[index] === order?.orderStatus?.driver} onClick={(e) => handleModifyStatus(e, order, status[index])}>{'Update'}</button>
+                                                        <button className='btn btn-filled mx-2 my-0' disabled={status[index] === order?.orderStatus?.driver} onClick={() => handleModifyStatus(order, status[index])}>{'Update'}</button>
                                                     </li>}
                                                 </>}
                                             </ul>
                                         </li>
                                         <CuisineModal
                                             onClickEvent={handleDeleteProduct}
+                                            status={str}
                                             product={order}
                                             title={tit}
                                             btnTitle={btnTitle}
