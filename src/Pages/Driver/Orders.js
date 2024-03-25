@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
+import CuisineModal from '../../Components/Cards/CuisineModal';
 import { getOrdersByDriver, modifyOrderStatus } from '../../Functions/Auth';
 
 const Orders = ({ title, driverStatus }) => {
@@ -10,6 +11,9 @@ const Orders = ({ title, driverStatus }) => {
     const [ordersDet, setOrdersDet] = useState('');
     const [status, setStatus] = useState({});
     const [updateStatus, setUpdateStatus] = useState({});
+    const [str, setStr] = useState({});
+    const [tit, setTit] = useState('');
+    const [btnTitle, setBtnTitle] = useState('');
 
     useEffect(() => {
         if (user) {
@@ -31,8 +35,7 @@ const Orders = ({ title, driverStatus }) => {
         }
     }, [title, user])
 
-    const handleOrderStatus = (e, str, order) => {
-        e.preventDefault();
+    const handleDeleteProduct = (order) => {
         let assignObj = {};
         let statusObj = {};
         const { orderdBy, _id, orderStatus, assignedTo } = order;
@@ -74,6 +77,18 @@ const Orders = ({ title, driverStatus }) => {
     const handleModifyStatus = (e, order, status) => {
         handleOrderStatus(e, status, order);
         setUpdateStatus({});
+    }
+
+    const handleOrderStatus = (e, st) => {
+        e.preventDefault();
+        setStr(st);
+        if (st === 'Order Confirmed') {
+            setBtnTitle('Approve');
+            setTit('Do you want to approve the order?');
+        } else {
+            setBtnTitle('Decline');
+            setTit('Do you want to delete the order?');
+        }
     }
 
     return (
@@ -135,8 +150,8 @@ const Orders = ({ title, driverStatus }) => {
                                                     </span>
                                                 </li>
                                                 {(order?.orderStatus?.driver === 'Order Placed') ? <li className='list-group-item bg-transparent border-0 py-2 px-0 m-0 text-center'>
-                                                    <button className='btn btn-filled fw-bold mx-2' onClick={(e) => handleOrderStatus(e, 'Order Confirmed', order)}>Approve</button>
-                                                    <button className='btn btn-hollow fw-bold mx-2' onClick={(e) => handleOrderStatus(e, 'Order Declined', order)}>Decline</button>
+                                                    <button className='btn btn-filled fw-bold mx-2' onClick={(e) => handleOrderStatus(e, 'Order Confirmed')} data-bs-toggle='modal' data-bs-target={`#static-backdrop-${order._id}`}>Approve</button>
+                                                    <button className='btn btn-hollow fw-bold mx-2' onClick={(e) => handleOrderStatus(e, 'Order Declined')} data-bs-toggle='modal' data-bs-target={`#static-backdrop-${order._id}`}>Decline</button>
                                                 </li> : order?.assignedTo?.name !== '' && <>
                                                     <li className='list-group-item bg-transparent p-0 m-0 border-0 w-100 text-start'>
                                                         <label className='col-form-label text-start fw-bold fs-6'>Order Status:</label>
@@ -163,6 +178,12 @@ const Orders = ({ title, driverStatus }) => {
                                                 </>}
                                             </ul>
                                         </li>
+                                        <CuisineModal
+                                            onClickEvent={handleDeleteProduct}
+                                            product={order}
+                                            title={tit}
+                                            btnTitle={btnTitle}
+                                        />
                                     </ul>
                                 )}
                             </div>

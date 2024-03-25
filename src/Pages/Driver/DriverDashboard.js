@@ -46,12 +46,6 @@ const DriverDashboard = () => {
                                                 {user?.dob}
                                             </span>
                                         </li>
-                                        <li className='list-group-item bg-transparent p-0 m-0 border-0 w-100 text-start'>
-                                            <label className='col-form-label text-start fw-bold fs-6'>Status:</label>
-                                            <span className='ps-2'>
-                                                {user?.status || 'pending'}
-                                            </span>
-                                        </li>
                                     </ul>
                                 </li>
                             </ul>

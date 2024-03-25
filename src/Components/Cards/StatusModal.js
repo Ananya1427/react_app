@@ -4,8 +4,15 @@ const StatusModal = ({ order, obj, drivers, onClickEvent }) => {
     const [selection, setSelection] = useState('-None-');
 
     const handleClick = () => {
-        let arr = selection?.split('-');
-        onClickEvent({ orderdBy: order.orderdBy, itemId: order._id, assignedTo: { name: arr[1].concat(' ', arr[2]), email: arr[0] }, orderStatus: { ...order.orderStatus, restaurant: obj.click }});
+        let name = '';
+        let email = '';
+        let arr;
+        if (selection === '-None') {
+            arr = selection?.split('-');
+            name = arr[1].concat(' ', arr[2]);
+            email = arr[0];
+        }
+        onClickEvent({ orderdBy: order.orderdBy, itemId: order._id, assignedTo: { name, email }, orderStatus: { ...order.orderStatus, restaurant: obj.click }});
     }
 
     const handleCancel = () => {

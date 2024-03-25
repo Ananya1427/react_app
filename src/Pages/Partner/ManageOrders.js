@@ -167,22 +167,26 @@ const ManageOrders = ({ restaurantStatus, title }) => {
                                                         {order?.orderStatus?.driver}
                                                     </span>
                                                 </li>
-                                                {(order?.orderStatus?.driver !== 'Order Delivered') && <li className='form-switch list-group-item bg-transparent p-0 m-0 border-0 w-100 text-start d-flex align-items-center'>
-                                                    <label htmlFor='update-order-status' className='col-form-label text-start fw-bold fs-6'>Update Order Status</label>
-                                                    <input class='form-check-input mx-2 rounded' type='checkbox' role='switch' id='update-order-status' onChange={() => setUpdateStatus({ ...updateStatus, [index]: !updateStatus[index] })} />
-                                                </li>}
-                                                {updateStatus[index] && <li className='list-group-item bg-transparent p-0 mx-0 my-2 border-0 w-50 text-start d-flex flex-row'>
-                                                    <select
-                                                        className='form-select rounded'
-                                                        id={`quantity-dropdown-${order._id}`}
-                                                        aria-label='Default select example'
-                                                        value={status[index]}
-                                                        onChange={(e) => setStatus({ ...status, [index]: e.target.value })}
-                                                    >
-                                                        {['Order Confirmed', 'Order Dispatched', 'Order Declined']?.map(option => <option key={option} value={option} selected={option === order?.orderStatus?.restaurant}>{option}</option>)}
-                                                    </select>
-                                                    <button className='btn btn-filled mx-2 my-0' disabled={status[index] === order?.orderStatus?.restaurant} onClick={() => handleModifyStatus(order, status[index])}>{'Update'}</button>
-                                                </li>}
+                                                {!(['Order Delivered', 'Order Declined'].includes(order?.orderStatus?.restaurant)) &&
+                                                    <>
+                                                        <li className='form-switch list-group-item bg-transparent p-0 m-0 border-0 w-100 text-start d-flex align-items-center'>
+                                                            <label htmlFor='update-order-status' className='col-form-label text-start fw-bold fs-6'>Update Order Status</label>
+                                                            <input class='form-check-input mx-2 rounded' type='checkbox' role='switch' id='update-order-status' onChange={() => setUpdateStatus({ ...updateStatus, [index]: !updateStatus[index] })} />
+                                                        </li>
+                                                        {updateStatus[index] && <li className='list-group-item bg-transparent p-0 mx-0 my-2 border-0 w-50 text-start d-flex flex-row'>
+                                                            <select
+                                                                className='form-select rounded'
+                                                                id={`quantity-dropdown-${order._id}`}
+                                                                aria-label='Default select example'
+                                                                value={status[index]}
+                                                                onChange={(e) => setStatus({ ...status, [index]: e.target.value })}
+                                                            >
+                                                                {['Order Confirmed', 'Order Dispatched', 'Order Declined']?.map(option => <option key={option} value={option} selected={option === order?.orderStatus?.restaurant}>{option}</option>)}
+                                                            </select>
+                                                            <button className='btn btn-filled mx-2 my-0' disabled={status[index] === order?.orderStatus?.restaurant} onClick={() => handleModifyStatus(order, status[index])}>{'Update'}</button>
+                                                        </li>}
+                                                    </>
+                                                }
                                             </> : <>
                                                 <li className='list-group-item bg-transparent p-0 m-0 border-0 w-100 text-start'>
                                                     <label className='col-form-label text-start fw-bold fs-6'>Restaurant Status:</label>
@@ -196,7 +200,7 @@ const ManageOrders = ({ restaurantStatus, title }) => {
                                                         {order?.orderStatus?.driver}
                                                     </span>
                                                 </li>
-                                                <li className='list-group-item bg-transparent p-0 m-0 border-0 w-100 text-start d-flex flex-row'>
+                                                {!(['Order Delivered', 'Order Declined'].includes(order?.orderStatus?.restaurant)) && <li className='list-group-item bg-transparent p-0 m-0 border-0 w-100 text-start d-flex flex-row'>
                                                     <label className='col-form-label text-start fw-bold fs-6'>Assign To:</label>
                                                     <div className='ps-2 d-flex flex-row'>
                                                         <select
@@ -210,7 +214,7 @@ const ManageOrders = ({ restaurantStatus, title }) => {
                                                         </select>
                                                         <button className='btn btn-filled mx-2 my-0' disabled={driver === '-None-'} onClick={() => handleAssignDriver(order)}>{'Assign'}</button>
                                                     </div>
-                                                </li>
+                                                </li>}
                                             </>}
                                             <StatusModal
                                                 order={order}

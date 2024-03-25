@@ -1,40 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 import './Card.css';
-import Modal from './Modal';
+import CuisineModal from './CuisineModal';
 
-const ProductCard = ({ product, handleClickEvent, email }) => {
-    const { cart } = useSelector(state => ({ ...state }));
+const ProductCard = ({ product, handleClickEvent }) => {
     const location = useLocation();
-
-    const [count, setCount] = useState(1);
-    const [selection, setSelection] = useState(0);
-
-    useEffect(() => {
-        fetchCountFromCart();
-    }, [cart])
 
     const handleRoute = (option) => {
         let routes = option.split(' ');
         return `${routes.length > 1 ? routes.map(route => route.toLowerCase()).join('-') : routes[0].toLowerCase()}`;
     }
 
-    const handleAddProduct = (obj) => {
-        handleClickEvent(obj);
-    }
-
     const handleDeleteProduct = (obj) => {
         handleClickEvent(obj);
-    }
-
-    const fetchCountFromCart = () => {
-        let index = cart && cart?.items?.length > 0 && cart?.items?.findIndex(prod => prod.orderFrom === email);
-        let item = cart?.items[index]?.cuisines?.find(item => item.cuisineId === product._id)
-        setCount(item && item.count || 0);
-        setSelection(item && item.count || 0);
     }
 
     return (
@@ -45,37 +25,18 @@ const ProductCard = ({ product, handleClickEvent, email }) => {
                 <p className='card-text'>{product.description}</p>
                 <span>&#36;{product.price}</span>
             </div>
-            {location.pathname === '/' ?
-                <div className='card-footer text-start'>
-                    <Link className='btn rounded-0 no-border w-50' to={`/view-product/${handleRoute(product.title)}`}>View</Link>
-                    <button type='button' className='btn rounded-0 border-0 w-50' data-bs-toggle='modal' data-bs-target={`#static-backdrop-${product._id}`}>
-                        {count > 0 ? `Edit Cart(${count})` : 'Add to Cart'}
-                    </button>
-                    <Modal
-                        onClickEvent={handleAddProduct}
-                        onClickCancel={fetchCountFromCart}
-                        product={product}
-                        count={count}
-                        setCount={setCount}
-                        setSelection={setSelection}
-                        selection={selection}
-                        title={`Select number of ${product.title}`}
-                        btnTitle={'Add to Cart'}
-                    />
-                </div>
-                :
-                <div className='card-footer text-start'>
-                    <Link className='btn rounded-0 no-border w-50' to={`/partner-update-cuisine/${handleRoute(product.title)}`}>Edit</Link>
-                    <button type='button' className='btn rounded-0 border-0 w-50' data-bs-toggle='modal' data-bs-target={`#static-backdrop-${product._id}`}>
-                        Delete
-                    </button>
-                    <Modal
-                        onClickEvent={handleDeleteProduct}
-                        product={product}
-                        title={`Do yo want to delete ${product.title} ?`}
-                        btnTitle={'Delete'}
-                    />
-                </div>}
+            <div className='card-footer text-start'>
+                <Link className='btn rounded-0 no-border w-50' to={`/partner-update-cuisine/${handleRoute(product.title)}`}>Edit</Link>
+                <button type='button' className='btn rounded-0 border-0 w-50' data-bs-toggle='modal' data-bs-target={`#static-backdrop-${product._id}`}>
+                    Delete
+                </button>
+                <CuisineModal
+                    onClickEvent={handleDeleteProduct}
+                    product={product}
+                    title={`Do yo want to delete ${product.title} ?`}
+                    btnTitle={'Delete'}
+                />
+            </div>
         </div>
     )
 }

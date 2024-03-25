@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 import ProductCard from '../../Components/Cards/ProductCard';
-import { getCuisines } from '../../Functions/Auth';
+import { getCuisines, deleteCuisine } from '../../Functions/Auth';
 import { useSelector } from 'react-redux';
 
 const ManageCuisines = () => {
@@ -28,7 +28,28 @@ const ManageCuisines = () => {
             })
     }, [restaurant])
 
-    const handleDeleteProduct = () => {}
+    const handleDeleteProduct = (obj) => {
+        const { product: { title } } = obj;
+        setLoading(true);
+        deleteCuisine(restaurant.token, title, restaurant.email)
+            .then(res => {
+                if (res.status === 200) {
+                    toast.success(res.data.message);
+                    // dispatch({
+                    //     type: 'USER_PRODUCTS',
+                    //     payload: res.data.products
+                    // })
+                    setCuisines(res.data.products);
+                } else {
+                    toast.error(res.data.message);
+                }
+                setLoading(false);
+            })
+            .catch(error => {
+                setLoading(false);
+                toast.error(error);
+            })
+    }
 
     return (
         <div className='row mt-5 pt-5 mx-md-2'>

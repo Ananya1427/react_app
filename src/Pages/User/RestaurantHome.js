@@ -91,10 +91,10 @@ const RestaurantHome = () => {
                 {
                     loading ? <h3 className='text-center m-3'>Loading...</h3> :
                         <div className='row'>
-                            <div className='col-5 p-2'>
+                            <div className='col-4 p-2'>
                                 <img src={restaurantDet?.restaurantImages[0].urls[0].url} className='w-100' alt='restaurant-image' />
                             </div>
-                            <div className='col-7'>
+                            <div className='col-8'>
                                 <ul className='list-group pt-4 pb-2 text-start'>
                                     <li className='list-group-item bg-transparent border-0 py-0 m-0 w-50 fw-semibold fs-4'>
                                         {restaurantDet?.restaurantName}
@@ -119,13 +119,13 @@ const RestaurantHome = () => {
                                         <li className='list-group-item bg-transparent border-0 py-0 m-0'>
                                             <label className='col-form-label text-start fw-bold fs-6'>Cuisines:</label>
                                             <span className='ps-2'>
-                                                {restaurantDet?.cuisineType?.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+                                                {restaurantDet?.cuisineType?.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(', ')}
                                             </span>
                                         </li>
                                         <li className='list-group-item bg-transparent border-0 py-0 m-0'>
                                             <label className='col-form-label text-start fw-bold fs-6'>Outlet Type:</label>
                                             <span className='ps-2'>
-                                                {restaurantDet?.outletType?.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
+                                                {restaurantDet?.outletType?.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(', ')}
                                             </span>
                                         </li>
                                     </ul>
@@ -146,15 +146,20 @@ const RestaurantHome = () => {
                                 </ul>
                             </div>
                             <div className='col m-4'>
-                                <h5 className='text-start'>Food Menu</h5>
                                 <div className='row'>
                                     {
-                                        cuisinesDet?.length > 0 && cuisinesDet.map(cuisine =>
-                                            <CuisineCard
-                                                restaurant={{ name: restaurantDet?.restaurantName, email: restaurantDet?.email }}
-                                                cuisine={cuisine}
-                                                handleAddProduct={handleAddProduct}
-                                            />)
+                                        cuisinesDet?.length > 0 ? <>
+                                            <h5 className='text-start'>Food Menu</h5>
+                                            {
+                                                cuisinesDet.map(cuisine =>
+                                                    <CuisineCard
+                                                        restaurant={{ name: restaurantDet?.restaurantName, email: restaurantDet?.email }}
+                                                        cuisine={cuisine}
+                                                        handleAddProduct={handleAddProduct}
+                                                    />)
+                                            }
+                                        </> :
+                                            <h5>No Cuisines</h5>
                                     }
                                 </div>
                             </div>

@@ -145,6 +145,21 @@ export const createOrUpdateCuisine = async (idToken, cuisineDetails) => {
     )
 }
 
+export const deleteCuisine = async (idToken, title, email) => {
+    return await axios.post(
+        `${process.env.REACT_APP_API}/deleteCuisine`,
+        {
+            title,
+            email
+        },
+        {
+            headers: {
+                idToken
+            }
+        }
+    )
+}
+
 export const getCuisines = async (email) => {
     return await axios.post(
         `${process.env.REACT_APP_API}/getCuisines`,
